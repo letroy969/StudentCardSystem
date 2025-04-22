@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header>
+      <h1>Welcome, Sihle!</h1>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <section class="status-section">
+      <h2>Student Card Creation Status</h2>
+      <p id="card-status">Status: <strong>Starting</strong></p>
+    </section>
+
+    <section class="submission-form">
+      <h2>Submit Your Details</h2>
+      <form id="studentForm">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" name="fullName" required>
+
+        <label for="studentNumber">Student Number:</label>
+        <input type="text" id="studentNumber" name="studentNumber" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="proof">Upload Proof of Registration:</label>
+        <input type="file" id="proof" name="proof" accept=".pdf,image/*" required>
+
+        <label for="photo">Upload Your Photo:</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section class="virtual-card-access">
+      <h2>Your Virtual Student Card</h2>
+      <p>You can access your virtual card once your application is complete.</p>
+      <button onclick="window.location.href='virtual-card.html'">Access Virtual Card</button>
+    </section>
+
+    <section class="guidelines">
+      <h2>How to Use Your Virtual Card</h2>
+      <ul>
+        <li>Place your smartphone against the campus card reader.</li>
+        <li>Use it for library access.</li>
+        <li>It's valid only with your photo and correct student number.</li>
+      </ul>
+    </section>
+  </div>
+
+  <script src="assets/js/dashboard.js"></script>
+</body>
+</html>

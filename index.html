@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Card System - Login</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="backbox">
+      <div class="loginMsg">
+        <div class="textcontent">
+          <p class="title">Don't have an account?</p>
+          <p>Sign up to create your student card.</p>
+          <button id="switch1">Sign Up</button>
+        </div>
+      </div>
+      <div class="signupMsg visibility">
+        <div class="textcontent">
+          <p>Already have your virtual card?</p>
+          <button2 id="accessCardBtn">Access Card</button2>
+        </div>
+      </div>
+    </div>
+
+    <div class="frontbox">
+      <div class="login">
+        <h2>LOG IN</h2>
+        <div class="inputbox">
+          <select name="role" id="role" style="width: 100%; height: 40px; margin-bottom: 20px; font-size: 12px;">
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
+          <input type="text" name="email" placeholder="  Email or Student Number">
+          <input type="password" name="password" placeholder="  Password">
+        </div>
+        <p>FORGOT PASSWORD?</p>
+        <button onclick="handleLogin()">LOG IN</button>
+      </div>
+
+      <div class="signup hide">
+        <h2>SIGN UP</h2>
+        <div class="inputbox">
+          <input type="text" name="fullname" placeholder="  Fullname">
+          <input type="text" name="email" placeholder="  Email">
+          <input type="password" name="password" placeholder="  Password">
+        </div>
+        <button>SIGN UP</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

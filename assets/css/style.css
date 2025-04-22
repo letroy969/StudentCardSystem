@@ -1,0 +1,113 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: url("../images/student-card-image.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.backbox{  
+  background: #c49f39;
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+
+.frontbox{
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px;
+  border-radius: 12px;
+  width: 350px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+
+
+.inputbox input, .inputbox select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+button {
+  padding: 10px 15px;
+  width: 100%;
+  background-color: #005fa3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button2 {
+  padding: 10px 15px;
+  width: 100%;
+  background-color: #6a757c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #00497c;
+}
+
+.hide {
+  display: none;
+}
+
+.visibility {
+  display: block;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 14px;
+  color: #1a1919;
+  margin: 10px 0;
+}
+
+@media screen and (max-width: 650px) {
+  .container {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .backbox {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .frontbox {
+    width: 90%;
+    right: auto;
+    margin: 20px auto;
+    position: relative;
+  }
+
+  .login button,
+  .signup button {
+    position: static;
+    width: 100%;
+    margin-top: 20px;
+  }
+}

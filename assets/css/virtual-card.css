@@ -1,0 +1,62 @@
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.ump-logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.card-year {
+  font-weight: bold;
+  font-size: 16px;
+  color: #000;
+}
+
+.card-body {
+  display: flex;
+  margin-top: 10px;
+  align-items: center;
+  gap: 15px;
+}
+
+.student-photo {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 2px solid #0077cc;
+}
+
+.student-details {
+  flex: 1;
+}
+
+.student-details h2 {
+  font-size: 16px;
+  margin: 0;
+  color: #000;
+}
+
+.student-details p {
+  margin: 2px 0;
+  font-size: 14px;
+}
+
+.campus {
+  color: red;
+  font-weight: bold;
+}
+
+.card-footer {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #000;
+  font-weight: bold;
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+}

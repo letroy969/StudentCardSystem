@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin - Update Card Status</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #0077cc;
+    }
+    label, select, button {
+      display: block;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <label for="studentNumber">Student Number:</label>
+  <input type="text" id="studentNumber" placeholder="Enter student number" />
+
+  <label for="status">Card Status:</label>
+  <select id="status">
+    <option value="Starting">Starting</option>
+    <option value="Processing">Processing</option>
+    <option value="Complete">Complete</option>
+    <option value="Rejected">Rejected</option>
+  </select>
+
+  <button onclick="updateStatus()">Update Status</button>
+
+  <script>
+    function updateStatus() {
+      const studentNumber = document.getElementById("studentNumber").value;
+      const status = document.getElementById("status").value;
+
+      if (!studentNumber) {
+        alert("Please enter a student number.");
+        return;
+      }
+
+      // Save status using student number as key
+      localStorage.setItem(`status_${studentNumber}`, status);
+      alert("Status updated successfully!");
+    }
+  </script>
+</body>
+</html>
