@@ -1,0 +1,186 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production builds
+build/
+dist/
+client/build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+.out
+.storybook-out
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# OCI private keys
+*.pem
+oci-private-key.pem
+
+# Database files
+*.sqlite
+*.db
+
+# Backup files
+*.bak
+*.backup
+
+# Test files
+test-results/
+coverage/
+
+# IDE files
+*.sublime-project
+*.sublime-workspace
+
+# Vim files
+*.swp
+*.swo
+
+# Emacs files
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# MySQL Installation (exclude entire MySQL directory)
+MySQL/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# CMake
+cmake-*/
+
+# Old project files
+*.html
+*.py
+*.tsx
+*.css
+*.js
+*.json
+*.txt
+*.pdf
+*.db
+*.sql
+requirements.txt
+setup_database.py
+database_setup.sql
+SETUP.md
+postcss.config.js
+tailwind.config.js
+vite.config.ts
+tsconfig.json
+tsconfig.node.json
+
+# Static files
+static/
+templates/
+
+# Old app files
+app*.py
