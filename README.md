@@ -95,12 +95,14 @@ Tech stack: Flask 3, MySQL (mysql-connector-python), Tailwind-styled templates, 
    MAIL_PASSWORD=<app_password>
    MAIL_DEFAULT_SENDER=<your_gmail>
    SUPPORT_RECIPIENT=<support inbox>
+   PROFILE_BASE_URL=https://your-app.onrender.com
    ```
+   **Note:** Set `PROFILE_BASE_URL` to your Render app URL (provided after first deploy) so QR codes point to the correct domain.
 5. Deploy – Render will provide an HTTPS URL.
 
 ### 4. Optional: custom domain
 - Add CNAME pointing to Render.
-- Set `PROFILE_BASE_IP` env var if QR profiles should point to your public domain.
+- Update `PROFILE_BASE_URL` env var to your custom domain.
 
 ---
 
@@ -125,10 +127,10 @@ See `env.example` for the full list. Critical ones:
 
 | Variable | Purpose |
 |----------|---------|
-| `SECRET_KEY` | Flask session/key signing |
-| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | MySQL connection |
+| `SECRET_KEY` | Flask session/key signing (REQUIRED) |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | MySQL connection (REQUIRED) |
 | `MAIL_*`, `SUPPORT_RECIPIENT` | Email notifications |
-| `PROFILE_BASE_IP` (optional) | Overrides auto-detected IP in QR URLs |
+| `PROFILE_BASE_URL` (optional) | Base URL for QR code profile links (auto-detected if not set) |
 
 ---
 

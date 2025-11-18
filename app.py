@@ -97,6 +97,41 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def get_profile_base_url():
+    """Get the base URL for profile links, works in both local and production."""
+    from flask import request
+    
+    # Check for environment variable first (for production)
+    profile_base = os.getenv('PROFILE_BASE_URL')
+    if profile_base:
+        return profile_base.rstrip('/')
+    
+    # In production (Render), use request.host with HTTPS
+    if os.getenv('FLASK_ENV') == 'production' or os.getenv('RENDER'):
+        try:
+            scheme = 'https' if request.is_secure or os.getenv('RENDER') else 'http'
+            return f"{scheme}://{request.host}"
+        except RuntimeError:
+            # Outside request context, use RENDER_EXTERNAL_URL if available
+            render_url = os.getenv('RENDER_EXTERNAL_URL')
+            if render_url:
+                return render_url.rstrip('/')
+            return 'https://your-app.onrender.com'  # Fallback
+    
+    # Local development: try to get local IP, fallback to request.host
+    try:
+        import socket
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+        return f"http://{local_ip}:5000"
+    except:
+        try:
+            return f"http://{request.host}"
+        except RuntimeError:
+            return "http://localhost:5000"
+
 def get_db_connection():
     try:
         conn = mysql.connector.connect(**DB_CONFIG, charset='utf8mb4', collation='utf8mb4_unicode_ci')
@@ -1141,9 +1176,9 @@ def generate_qr(data):
 @app.route('/generate-qr-json/<path:data>')
 def generate_qr_json(data):
     try:
-        # Use local network IP for QR code accessibility
-        local_ip = "10.7.23.41"
-        profile_url = f"http://{local_ip}:5000/profile/{data}"
+        # Use dynamic base URL that works in both local and production
+        base_url = get_profile_base_url()
+        profile_url = f"{base_url}/profile/{data}"
         
         qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
         qr.add_data(profile_url)
@@ -1328,24 +1363,9 @@ def lecture_card_preview():
 @app.route('/qr-image/<path:email>', endpoint='qr_image')
 def qr_image(email):
     try:
-        # Dynamically get local IP address for QR code accessibility
-        import socket
-        
-        # Try to get the actual local network IP (not 127.0.0.1)
-        local_ip = None
-        try:
-            # Connect to a remote socket to get the local IP
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("8.8.8.8", 80))
-            local_ip = s.getsockname()[0]
-            s.close()
-        except:
-            # Fallback to gethostbyname
-            hostname = socket.gethostname()
-            local_ip = socket.gethostbyname(hostname)
-        
-        # Build the profile URL
-        profile_url = f"http://{local_ip}:5000/profile/{email}"
+        # Use dynamic base URL that works in both local and production
+        base_url = get_profile_base_url()
+        profile_url = f"{base_url}/profile/{email}"
         
         print(f"Generating QR code with URL: {profile_url}")
 
