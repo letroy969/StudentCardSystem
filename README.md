@@ -60,7 +60,9 @@ Tech stack: Flask 3, MySQL (mysql-connector-python), Tailwind-styled templates, 
 
 ---
 
-## Production deployment (Render + PlanetScale)
+## Production deployment options
+
+### Option 1: Render + PlanetScale (Recommended for simplicity)
 
 ### 1. Prepare repo
 - Ensure `requirements.txt`, `Procfile`, and `env.example` are committed (already done).
@@ -103,6 +105,26 @@ Tech stack: Flask 3, MySQL (mysql-connector-python), Tailwind-styled templates, 
 ### 4. Optional: custom domain
 - Add CNAME pointing to Render.
 - Update `PROFILE_BASE_URL` env var to your custom domain.
+
+---
+
+### Option 2: Fly.io + PlanetScale (Best free tier)
+
+**Why Fly.io?**
+- ✅ Generous free tier: 3 VMs, 3GB persistent storage, 160GB transfer/month
+- ✅ Persistent file storage (volumes) for uploads
+- ✅ Global edge deployment
+- ✅ Automatic HTTPS
+
+**Quick Setup:**
+1. Install Fly CLI: `powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"`
+2. Sign up: `fly auth signup`
+3. Deploy: `fly launch` (follow prompts)
+4. Create volume: `fly volumes create uploads_volume --region iad --size 3`
+5. Set secrets: `fly secrets set SECRET_KEY="..." DB_HOST="..."` (see `DEPLOY_FLY.md`)
+6. Deploy: `fly deploy`
+
+See `DEPLOY_FLY.md` for detailed Fly.io deployment instructions.
 
 ---
 
