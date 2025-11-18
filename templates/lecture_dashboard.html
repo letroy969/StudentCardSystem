@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>Lecturer Dashboard - University of Mpumalanga</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        .bg-image {
+            /* background-image: url("{{ url_for('static', filename='images/10yrs.jpg') }}"); */
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        .bg-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .message {
+            display: none;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+        .message.show {
+            display: block;
+        }
+        .message-success {
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #059669;
+        }
+        .message-error {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+        .form-container {
+            margin-top: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+        }
+        .form-group button {
+            background-color: #1a365d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .form-group button:hover {
+            background-color: #2a4365;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flashMessages" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000;">
+                {% for category, message in messages %}
+                    <div class="flash-message" style="background: {% if category == 'error' %}#f56565{% else %}#48bb78{% endif %}; color: white; padding: 15px 20px; margin: 5px 0; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold; text-align: center; min-width: 300px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            <script>
+                // Simple and reliable auto-hide after 3 seconds
+                window.onload = function() {
+                    setTimeout(function() {
+                        var flashMessages = document.getElementById('flashMessages');
+                        if (flashMessages) {
+                            flashMessages.style.display = 'none';
+                        }
+                    }, 3000);
+                };
+            </script>
+        {% endif %}
+    {% endwith %}
+    <div class="bg-image">
+        <div class="bg-overlay"></div>
+        <!-- Navigation -->
+        <nav class="bg-white shadow-md relative z-50">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="UMP Logo" class="h-8 w-auto">
+                        <span class="ml-2 text-xl font-semibold text-gray-800">Lecturer Portal</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span id="userName" class="text-gray-700">{{ session['user'] }}</span>
+                        <a href="/logout" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors relative z-50">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Main Content -->
+        <div class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+            <div id="messageContainer" class="message"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column - Lecturer Card Form -->
+                <div class="md:col-span-1">
+                    <div class="bg-white bg-opacity-90 rounded-lg shadow-lg p-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Staff Card</h2>
+                        <form id="lectureCardForm" class="form-container" method="POST" action="/update-lecture-card" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <select id="title" name="title" required>
+                                    <option value="MR" {% if card_data and card_data.title == 'MR' %}selected{% endif %}>Mr</option>
+                                    <option value="MS" {% if card_data and card_data.title == 'MS' %}selected{% endif %}>Ms</option>
+                                    <option value="DR" {% if card_data and card_data.title == 'DR' %}selected{% endif %}>Dr</option>
+                                    <option value="PROF" {% if card_data and card_data.title == 'PROF' %}selected{% endif %}>Prof</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="employeeNumber">Employee Number</label>
+<input 
+  type="text" 
+  id="employeeNumber" 
+  name="employeeNumber" 
+  value="{{ card_data.employee_number if card_data else '' }}" 
+  pattern="\d{5}" 
+  minlength="5" 
+  maxlength="5" 
+  inputmode="numeric" 
+  required 
+  title="Please enter exactly 5 digits"
+>
+
+                            </div>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" value="{{ card_data.name + ' ' + card_data.surname if card_data else '' }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="qualification">Select your Staff role:</label>
+<select id="staff_role" name="qualification" required>
+  <option value="" disabled {% if not card_data or not card_data.staff_role %}selected{% endif %}>-- Choose Faculty --</option>
+
+  <option value="Faculty of Agriculture and Natural Sciences" {% if card_data and card_data.staff_role == 'Faculty of Agriculture and Natural Sciences' %}selected{% endif %}>Faculty of Agriculture and Natural Sciences</option>
+
+  <option value="Faculty of Education" {% if card_data and card_data.staff_role == 'Faculty of Education' %}selected{% endif %}>Faculty of Education</option>
+
+  <option value="Faculty of Economics, Development and Business Sciences" {% if card_data and card_data.staff_role == 'Faculty of Economics, Development and Business Sciences' %}selected{% endif %}>Faculty of Economics, Development and Business Sciences</option>
+  <option value="Administration" {% if card_data and card_data.staff_role == 'Administration' %}selected{% endif %}>Administration</option>
+</select>
+
+
+                            
+                                <p style="font-size: 0.9em; color: #1a365d; margin-top: 6px;">
+                                    Please select your postgraduate qualification code. If your qualification is not listed, choose ‘OTHER’ and enter the full title in the remarks field.
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <label for="campus">Campus</label>
+                                <select id="campus" name="campus" required>
+                                    <option value="Mbombela Campus" {% if staff_campus == 'Mbombela Campus' %}selected{% endif %}>Mbombela Campus</option>
+                                    <option value="Siyabuswa Campus" {% if staff_campus == 'Siyabuswa Campus' %}selected{% endif %}>Siyabuswa Campus</option>
+                                </select>
+                                <small style="color: #1a365d; font-size: 0.8em;">Select the campus you are based at.</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <!-- Photo Upload Options -->
+                                <div style="font-size: 0.9em; color: #e53e3e; margin-bottom: 5px;">
+                                    <strong>Photo Requirements:</strong><br>
+                                    • Make sure your face is clearly visible and facing forward<br>
+                                    • Only one face should be visible in the image<br>
+                                    • Face should be properly sized (not too small or too large)<br>
+                                    • Supported formats: JPG, PNG, GIF
+                                </div>
+                                
+                                <!-- Photo Upload Method Selection -->
+                                <div style="margin-bottom: 15px;">
+                                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Choose Photo Method:</label>
+                                    <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                                        <label style="display: flex; align-items: center; cursor: pointer;">
+                                            <input type="radio" name="photo_method" value="upload" checked style="margin-right: 8px;">
+                                            Upload Photo
+                                        </label>
+                                        <label style="display: flex; align-items: center; cursor: pointer;">
+                                            <input type="radio" name="photo_method" value="live" style="margin-right: 8px;">
+                                            Take Live Photo
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Upload Photo Option -->
+                                <div id="upload-section">
+                                    <label for="photo">Upload Photo</label>
+                                    <input type="file" id="photo" name="photo" accept="image/*" {% if not card_data %}required{% endif %}>
+                                </div>
+
+                                <!-- Live Photo Option -->
+                                <div id="live-section" style="display: none;">
+                                    <label>Live Photo Capture</label>
+                                    <div style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; background: #f9f9f9;">
+                                        <video id="video" width="320" height="240" autoplay style="display: none; border-radius: 8px;"></video>
+                                        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                        <div id="live-photo-placeholder">
+                                            <p style="margin-bottom: 15px; color: #666;">Click "Start Camera" to take a live photo</p>
+                                            <div id="face-status" style="margin-bottom: 15px; font-weight: bold; color: #ff9800;">Position your face in the frame</div>
+                                            <button type="button" id="start-camera" style="background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Start Camera</button>
+                                            <button type="button" id="capture-photo" style="background: #2196F3; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; display: none;">Capture Photo</button>
+                                            <button type="button" id="retake-photo" style="background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; display: none;">Retake</button>
+                                        </div>
+                                        <div id="captured-photo" style="display: none;">
+                                            <img id="captured-image" style="max-width: 320px; max-height: 240px; border-radius: 8px; margin-bottom: 10px;">
+                                            <p id="capture-status" style="color: #4CAF50; font-weight: bold;">Photo captured successfully!</p>
+                                            <div id="auto-save-indicator" style="display: none; margin-top: 10px;">
+                                                <div style="display: flex; align-items: center; justify-content: center; color: #2196F3;">
+                                                    <div style="width: 20px; height: 20px; border: 2px solid #2196F3; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 10px;"></div>
+                                                    <span>Auto-saving your details...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="live-photo-data" name="live_photo_data">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!-- Note for proof of employment upload -->
+                                <div style="font-size: 0.9em; color: #e53e3e; margin-bottom: 5px;">
+                                    <strong>Proof of Employment Requirements:</strong><br>
+                                    • Must be a valid PDF file from University of Mpumalanga<br>
+                                    • Must contain year "2025"<br>
+                                    • Must contain your Employee Number (as entered above)<br>
+                                    • Must contain your Full Name (as entered above)<br>
+                                    • Must contain employment-related keywords (employment, appointment, staff, etc.)<br>
+                                    • Should be a clear, readable document
+                                </div>
+                                <label for="proof_of_employment">Proof of Employment (PDF) *</label>
+                                <input type="file" id="proof_of_employment" name="proof_of_employment" accept="application/pdf" {% if not card_data %}required{% endif %}>
+                                <small style="color: #e53e3e; font-size: 0.8em;">* Required for staff card verification</small>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit">Update Card</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- Right Column - Quick Actions -->
+                <div class="md:col-span-1">
+                    <div class="bg-white bg-opacity-90 rounded-lg shadow-lg p-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Quick Actions</h2>
+                        <div class="space-y-4">
+                            <a href="/lecture-card-preview" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-start">
+                                Preview Card
+                            </a>
+                            <button onclick="downloadLectureCard()" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-start">
+                                Download Card
+                            </button>
+                            <a href="/submit-ticket" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-start">
+                                Report Problem
+                            </a>
+                            <a href="/security-settings" class="w-full bg-gray-100 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-start">
+                                Update Security Questions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Configure axios defaults
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Content-Type'] = 'application/json';
+        axios.defaults.headers.common['Accept'] = 'application/json';
+        
+        // Check authentication status
+        async function checkAuth() {
+            try {
+                const response = await axios.get('/api/check-auth');
+                if (!response.data.authenticated) {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+        
+        // Auto-hide flash messages
+        function autoHideFlashMessages() {
+            const flashMessages = document.querySelectorAll('.alert, .flash-message, .message');
+            flashMessages.forEach(function(message) {
+                // Check if it's a success message
+                if (message.classList.contains('alert-success') || 
+                    message.classList.contains('success') || 
+                    message.textContent.includes('successfully') ||
+                    message.textContent.includes('detected successfully')) {
+                    // Hide success messages after 2 seconds
+                    setTimeout(() => {
+                        message.style.opacity = '0';
+                        message.style.transition = 'opacity 0.5s ease-out';
+                        setTimeout(() => {
+                            message.style.display = 'none';
+                        }, 500);
+                    }, 2000);
+                } else {
+                    // Hide other messages after 3 seconds
+                    setTimeout(() => {
+                        message.style.opacity = '0';
+                        message.style.transition = 'opacity 0.5s ease-out';
+                        setTimeout(() => {
+                            message.style.display = 'none';
+                        }, 500);
+                    }, 3000);
+                }
+            });
+        }
+        
+        // Check auth when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            autoHideFlashMessages();
+        });
+        
+        // Lecture Card Form Handler
+        document.getElementById('lectureCardForm').addEventListener('submit', function(e) {
+            // Form will be submitted to /update-lecture-card via POST
+            // No need for JavaScript handling as it's handled server-side
+        });
+        
+        // Register attendance function (placeholder)
+        function registerAttendance() {
+            alert('Attendance registration coming soon!');
+        }
+
+        // Live Photo Capture Functionality with Auto-Detection
+        let stream = null;
+        let video = null;
+        let canvas = null;
+        let capturedImageData = null;
+        let faceDetectionInterval = null;
+        let faceDetected = false;
+        let countdownTimer = null;
+        let countdownSeconds = 3;
+        let autoSaveCountdown = null;
+
+        // Initialize live photo functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            video = document.getElementById('video');
+            canvas = document.getElementById('canvas');
+            
+            // Handle photo method selection
+            const photoMethodRadios = document.querySelectorAll('input[name="photo_method"]');
+            const uploadSection = document.getElementById('upload-section');
+            const liveSection = document.getElementById('live-section');
+            
+            photoMethodRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'upload') {
+                        uploadSection.style.display = 'block';
+                        liveSection.style.display = 'none';
+                        stopCamera();
+                    } else if (this.value === 'live') {
+                        uploadSection.style.display = 'none';
+                        liveSection.style.display = 'block';
+                    }
+                });
+            });
+
+            // Camera controls
+            document.getElementById('start-camera').addEventListener('click', startCamera);
+            document.getElementById('capture-photo').addEventListener('click', capturePhoto);
+            document.getElementById('retake-photo').addEventListener('click', retakePhoto);
+        });
+
+        async function startCamera() {
+            try {
+                // Request camera access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: 320, 
+                        height: 240,
+                        facingMode: 'user' // Front camera
+                    } 
+                });
+                
+                video.srcObject = stream;
+                video.style.display = 'block';
+                
+                // Show/hide buttons
+                document.getElementById('live-photo-placeholder').style.display = 'none';
+                document.getElementById('capture-photo').style.display = 'inline-block';
+                document.getElementById('start-camera').style.display = 'none';
+                
+                // Start face detection
+                startFaceDetection();
+                
+                showMessage('Camera started! Position your face in the frame - photo will be taken automatically when face is detected!', 'success');
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                showMessage('Error accessing camera. Please ensure camera permissions are granted.', 'error');
+            }
+        }
+
+        function startFaceDetection() {
+            // Simple face detection using canvas analysis
+            faceDetectionInterval = setInterval(() => {
+                if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
+                    detectFace();
+                }
+            }, 100); // Check every 100ms
+        }
+
+        function detectFace() {
+            if (!video || !canvas) return;
+            
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 320, 240);
+            
+            const imageData = context.getImageData(0, 0, 320, 240);
+            const data = imageData.data;
+            
+            // Simple face detection based on skin tone detection
+            let skinPixels = 0;
+            let totalPixels = 0;
+            
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                
+                // Simple skin tone detection
+                if (r > 95 && g > 40 && b > 20 && 
+                    Math.max(r, g, b) - Math.min(r, g, b) > 15 && 
+                    Math.abs(r - g) > 15 && r > g && r > b) {
+                    skinPixels++;
+                }
+                totalPixels++;
+            }
+            
+            const skinPercentage = (skinPixels / totalPixels) * 100;
+            
+            // Update face detection status
+            const statusElement = document.getElementById('face-status');
+            if (skinPercentage > 5) { // Threshold for face detection
+                if (!faceDetected) {
+                    faceDetected = true;
+                    if (statusElement) {
+                        statusElement.textContent = 'Face detected! Get ready...';
+                        statusElement.style.color = '#4CAF50';
+                    }
+                    startCountdown();
+                }
+            } else {
+                if (faceDetected) {
+                    faceDetected = false;
+                    if (statusElement) {
+                        statusElement.textContent = 'Position your face in the frame';
+                        statusElement.style.color = '#ff9800';
+                    }
+                    clearCountdown();
+                }
+            }
+        }
+
+        function startCountdown() {
+            if (countdownTimer) return; // Already counting down
+            
+            countdownSeconds = 3;
+            const statusElement = document.getElementById('face-status');
+            
+            countdownTimer = setInterval(() => {
+                if (statusElement) {
+                    statusElement.textContent = `Capturing in ${countdownSeconds}...`;
+                    statusElement.style.color = '#2196F3';
+                }
+                
+                countdownSeconds--;
+                
+                if (countdownSeconds < 0) {
+                    clearCountdown();
+                    capturePhoto();
+                }
+            }, 1000);
+        }
+
+        function clearCountdown() {
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+        }
+
+        function capturePhoto() {
+            if (!video || !canvas) return;
+            
+            // Stop face detection
+            if (faceDetectionInterval) {
+                clearInterval(faceDetectionInterval);
+                faceDetectionInterval = null;
+            }
+            
+            const context = canvas.getContext('2d');
+            
+            // Draw the current video frame to canvas
+            context.drawImage(video, 0, 0, 320, 240);
+            
+            // Convert canvas to base64 image data
+            capturedImageData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Show captured image
+            const capturedImage = document.getElementById('captured-image');
+            capturedImage.src = capturedImageData;
+            
+            // Show/hide elements
+            document.getElementById('captured-photo').style.display = 'block';
+            document.getElementById('capture-photo').style.display = 'none';
+            document.getElementById('retake-photo').style.display = 'inline-block';
+            
+            // Store the image data in hidden input
+            document.getElementById('live-photo-data').value = capturedImageData;
+            
+            // Stop camera
+            stopCamera();
+            
+            showMessage('Photo captured successfully! You can now save the photo manually or wait for auto-save.', 'success');
+            
+            // Show manual save option
+            document.getElementById('capture-status').textContent = 'Photo captured! Click "Save Photo" to save manually.';
+            
+            // Show manual save button
+            const capturedPhoto = document.getElementById('captured-photo');
+            if (!document.getElementById('manual-save-btn')) {
+                const manualSaveBtn = document.createElement('button');
+                manualSaveBtn.type = 'button';
+                manualSaveBtn.id = 'manual-save-btn';
+                manualSaveBtn.textContent = 'Save Photo Now';
+                manualSaveBtn.style.cssText = 'background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px;';
+                manualSaveBtn.onclick = function() {
+                    console.log('Manual save clicked');
+                    // Clear auto-save countdown
+                    if (autoSaveCountdown) {
+                        clearInterval(autoSaveCountdown);
+                        autoSaveCountdown = null;
+                    }
+                    document.getElementById('capture-status').textContent = 'Saving now...';
+                    autoSubmitForm();
+                };
+                capturedPhoto.appendChild(manualSaveBtn);
+            }
+            
+            // Start countdown for auto-save
+            let countdown = 5;
+            autoSaveCountdown = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    document.getElementById('capture-status').textContent = `Photo captured! Auto-saving photo in ${countdown} seconds...`;
+                } else {
+                    clearInterval(autoSaveCountdown);
+                    document.getElementById('capture-status').textContent = 'Auto-saving photo now...';
+                    autoSubmitForm();
+                }
+            }, 1000);
+        }
+
+        function autoSubmitForm() {
+            console.log('autoSubmitForm called - saving photo only');
+            
+            // Get the form
+            const form = document.getElementById('lectureCardForm');
+            if (!form) {
+                console.log('Form not found!');
+                showMessage('Form not found. Please submit manually.', 'error');
+                return;
+            }
+            
+            // Get the live photo data
+            const livePhotoData = document.getElementById('live-photo-data').value;
+            if (!livePhotoData) {
+                console.log('No live photo data found!');
+                showMessage('No photo to save. Please take a photo first.', 'error');
+                return;
+            }
+            
+            // Create a new form just for photo upload
+            const photoForm = document.createElement('form');
+            photoForm.method = 'POST';
+            photoForm.action = '/update-lecture-card';
+            photoForm.enctype = 'multipart/form-data';
+            photoForm.style.display = 'none';
+            
+            // Add only the live photo data
+            const photoInput = document.createElement('input');
+            photoInput.type = 'hidden';
+            photoInput.name = 'live_photo_data';
+            photoInput.value = livePhotoData;
+            photoForm.appendChild(photoInput);
+            
+            // Add to page and submit
+            document.body.appendChild(photoForm);
+            console.log('Submitting photo only...');
+            photoForm.submit();
+        }
+
+        function retakePhoto() {
+            // Reset UI
+            document.getElementById('captured-photo').style.display = 'none';
+            document.getElementById('retake-photo').style.display = 'none';
+            document.getElementById('live-photo-placeholder').style.display = 'block';
+            document.getElementById('start-camera').style.display = 'inline-block';
+            
+            // Clear captured data
+            capturedImageData = null;
+            document.getElementById('live-photo-data').value = '';
+            
+            // Reset face detection state
+            faceDetected = false;
+            clearCountdown();
+            
+            // Restart camera
+            startCamera();
+        }
+
+        function stopCamera() {
+            // Stop face detection
+            if (faceDetectionInterval) {
+                clearInterval(faceDetectionInterval);
+                faceDetectionInterval = null;
+            }
+            
+            // Clear countdown
+            clearCountdown();
+            
+            // Reset face detection state
+            faceDetected = false;
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            if (video) {
+                video.srcObject = null;
+                video.style.display = 'none';
+            }
+        }
+
+        // Clean up camera when page unloads
+        window.addEventListener('beforeunload', stopCamera);
+
+        function downloadLectureCard() {
+            const downloadUrl = '/lecture-card-preview?download=1';
+            const win = window.open(downloadUrl, '_blank');
+            if (!win) {
+                window.location.href = downloadUrl;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Card Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f2f5;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+
+        .student-card {
+            width: 85.6mm;
+            height: 53.98mm;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform: scale(2);
+            transform-origin: center;
+            margin: 20px auto;
+            animation: cardAppear 0.6s ease-out;
+        }
+        .student-card.downloading {
+            transform: none !important;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: scale(1.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(2);
+            }
+        }
+
+        .preview-title {
+            color: #1a365d;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            padding: 5px;
+        }
+
+        .card-header {
+            color: #1a365d;
+            padding: 5px;
+            text-align: center;
+            position: relative;
+            height: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: none;
+        }
+
+        .card-title {
+            font-size: 10px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            color: #000;
+            text-align: center;
+        }
+
+        .university-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+            padding-left: 40px;
+        }
+
+        .card-logo {
+            width: 120px;
+            height: 75px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .year-text {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 10px;
+            color: #000;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .campus-name {
+            font-size: 9px;
+            color: #ff0000;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-content {
+            padding: 8px;
+            height: 75%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photo-container {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #1a365d;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .student-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-info {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            margin-top: 5px;
+            margin-left: 0;
+            padding-top: 80px;
+            position: absolute;
+            top: -20px;
+            left: 8px;
+            right: 8px;
+        }
+
+        .name-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .student-title {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-name {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-surname {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-qualification {
+            font-size: 8px;
+            color: #000;
+            margin-top: 5px;
+        }
+
+        .card-dates {
+            position: absolute;
+            bottom: 25px;
+            left: 8px;
+            font-size: 7px;
+            color: #666;
+        }
+
+        .card-date {
+            margin-bottom: 2px;
+        }
+
+        .card-date-label {
+            font-weight: bold;
+            margin-right: 3px;
+        }
+
+        .card-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #1a365d;
+            color: white;
+            padding: 3px;
+            text-align: center;
+            font-size: 9px;
+            letter-spacing: 0.3px;
+            font-weight: bold;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code {
+            position: absolute;
+            bottom: 49px;
+            right: 8px;
+            width: 45px;
+            height: 45px;
+            z-index: 10;
+            border: 1px solid #fff;
+            background: #fff;
+            padding: 2px;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #1a365d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeIn 0.5s ease-out 0.3s both;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background: #2a4365;
+            transform: translateY(-1px);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="flashMessages" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 2000;">
+                {% for category, message in messages %}
+                    <div class="flash-message" style="background: {% if category == 'error' %}#f56565{% else %}#48bb78{% endif %}; color: white; padding: 15px 20px; margin: 5px 0; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); font-weight: bold; text-align: center; min-width: 300px;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            <script>
+                // Auto-hide messages: success after 2 seconds, others after 3 seconds
+                window.onload = function() {
+                    var flashMessages = document.getElementById('flashMessages');
+                    if (flashMessages) {
+                        var messageDivs = flashMessages.querySelectorAll('.flash-message');
+                        messageDivs.forEach(function(messageDiv) {
+                            var messageText = messageDiv.textContent.toLowerCase();
+                            var isSuccess = messageText.includes('successfully') || 
+                                           messageText.includes('detected successfully') ||
+                                           messageText.includes('captured and saved');
+                            
+                            var timeout = isSuccess ? 2000 : 3000;
+                            setTimeout(function() {
+                                messageDiv.style.opacity = '0';
+                                messageDiv.style.transition = 'opacity 0.5s ease-out';
+                                setTimeout(function() {
+                                    messageDiv.style.display = 'none';
+                                }, 500);
+                            }, timeout);
+                        });
+                    }
+                };
+            </script>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="student-card" id="lectureCardPreview">
+        <div class="card-overlay">
+            <span class="year-text">2025</span>
+            <div class="photo-container">
+                {% if card_data and card_data.photo_path %}
+                    <img id="displayPhoto" src="{{ url_for('static', filename=card_data.photo_path) }}" alt="Lecturer Photo" class="student-photo" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/user.jpg') }}';">
+                {% else %}
+                    <img id="displayPhoto" src="{{ url_for('static', filename='images/user.jpg') }}" alt="Lecturer Photo" class="student-photo">
+                {% endif %}
+            </div>
+            <div class="card-header">
+                <h1 class="card-title">STAFF CARD</h1>
+                <div class="university-container">
+                    <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="UMP Logo" class="card-logo">
+                </div>
+                <div class="campus-name">{{ staff_campus.upper() if staff_campus else 'MBOMBELA CAMPUS' }}</div>
+            </div>
+            <div class="card-content">
+                <div class="student-info">
+                    <div class="name-container">
+                        <span class="student-title" id="displayTitle">{{ card_data.title if card_data else 'MR' }}</span>
+                        <span class="student-name" id="displayName">{{ card_data.name if card_data else '' }}</span>
+                        <span class="student-surname" id="displaySurname">{{ card_data.surname if card_data else '' }}</span>
+                    </div>
+                    <div class="student-qualification" id="displayQualification">{{ card_data.qualification if card_data else '' }}</div>
+                </div>
+                <img src="{{ url_for('qr_image', email=session.user) }}" alt="QR Code" class="qr-code">
+            </div>
+            <div class="card-footer">
+                <p id="footerEmployeeNumber">{{ card_data.employee_number if card_data else '' }}</p>
+            </div>
+        </div>
+    </div>
+    <a href="/lecture-dashboard" class="back-button">Back to Dashboard</a>
+    <button id="downloadLectureBtn" class="back-button" style="left:auto; right:20px; background:#1a365d;">Download Card</button>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script>
+    function downloadLecturePreview() {
+        const card = document.getElementById('lectureCardPreview');
+        if (!card) return;
+        card.classList.add('downloading');
+        html2canvas(card, {
+            scale: 3,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            logging: false
+        }).then(canvas => {
+            canvas.toBlob(function(blob) {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = 'staff-card.png';
+                link.href = url;
+                link.click();
+                window.URL.revokeObjectURL(url);
+            }, 'image/png', 1.0);
+        }).finally(() => {
+            card.classList.remove('downloading');
+        });
+    }
+
+    const downloadBtn = document.getElementById('downloadLectureBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', downloadLecturePreview);
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('download') === '1') {
+        setTimeout(() => {
+            downloadLecturePreview();
+            if (window.opener) {
+                setTimeout(() => window.close(), 1500);
+            }
+        }, 500);
+    }
+    </script>
+</body>
+</html>

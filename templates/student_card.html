@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Card - UMP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .student-card {
+            width: 85.6mm;
+            height: 53.98mm;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            transform: scale(2);
+            transform-origin: top left;
+            margin: 20px;
+            background-image: url("{{ url_for('static', filename='1.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            display: none; /* Hide by default */
+        }
+
+        .student-card.visible {
+            display: block;
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 5px;
+        }
+
+        .card-header {
+            color: #1a365d;
+            padding: 5px;
+            text-align: center;
+            position: relative;
+            height: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: none;
+        }
+
+        .card-title {
+            font-size: 10px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+            color: #1a365d;
+            text-align: center;
+        }
+
+        .university-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px 0;
+        }
+
+        .card-logo {
+            width: 100px;
+            height: 60px;
+            display: block;
+            object-fit: contain;
+        }
+
+        .university-name {
+            display: none;
+        }
+
+        .campus-name {
+            font-size: 9px;
+            color: #ff0000;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-student-number {
+            display: none;
+        }
+
+        .card-content {
+            padding: 8px;
+            height: 75%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .photo-container {
+            width: 90px;
+            height: 90px;
+            border: 1px solid #1a365d;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 5px;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+
+        .student-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .student-info {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            margin-top: 5px;
+            margin-left: 0;
+            padding-top: 80px;
+            position: absolute;
+            top: -20px;
+            left: 8px;
+            right: 8px;
+        }
+
+        .name-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .student-title {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-name {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-surname {
+            font-size: 8px;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .student-qualification {
+            font-size: 8px;
+            color: #000;
+            margin-top: 5px;
+        }
+
+        .card-footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #1a365d;
+            color: white;
+            padding: 3px;
+            text-align: center;
+            font-size: 9px;
+            letter-spacing: 0.3px;
+            font-weight: bold;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code {
+            position: absolute;
+            bottom: 25px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-right: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #1a365d;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group button {
+            background: #1a365d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .form-group button:hover {
+            background: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="form-container">
+            <h2>Update Student Card</h2>
+            <form id="studentCardForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <select id="title" name="title" required>
+                        <option value="MR">Mr</option>
+                        <option value="MS">Ms</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentNumber">Student Number</label>
+                    <input type="text" id="studentNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="qualification">Qualification Code</label>
+                    <input type="text" id="qualification" required>
+                </div>
+                <div class="form-group">
+                    <label for="photo">Photo</label>
+                    <input type="file" id="photo" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Update Card</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="student-card">
+            <div class="card-overlay">
+                <div class="photo-container">
+                    <img id="displayPhoto" src="" alt="Student Photo" class="student-photo">
+                </div>
+                <div class="card-header">
+                    <h1 class="card-title">STUDENT CARD</h1>
+                    <div class="university-container">
+                        <img src="{{ url_for('static', filename='ump.png') }}" alt="UMP Logo" class="card-logo">
+                    </div>
+                <div class="campus-name">{{ (card_data.campus if card_data and card_data.campus else 'MBOMBELA CAMPUS') }}</div>
+                </div>
+                <div class="card-content">
+                    <div class="student-info">
+                        <div class="name-container">
+                            <span class="student-title" id="displayTitle">MR</span>
+                            <span class="student-name" id="displayName"></span>
+                            <span class="student-surname" id="displaySurname"></span>
+                        </div>
+                        <div class="student-qualification" id="displayQualification"></div>
+                    </div>
+                    <img src="{{ url_for('static', filename='qr-code.png') }}" alt="QR Code" class="qr-code">
+                </div>
+                <div class="card-footer">
+                    <p id="footerStudentNumber"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get form values and store in sessionStorage
+        document.getElementById('studentCardForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const title = document.getElementById('title').value;
+            const studentNumber = document.getElementById('studentNumber').value;
+            const fullName = document.getElementById('fullName').value;
+            const qualification = document.getElementById('qualification').value;
+            const photoFile = document.getElementById('photo').files[0];
+
+            // Split full name into name and surname
+            const nameParts = fullName.split(' ');
+            const firstName = nameParts[0];
+            const surname = nameParts.slice(1).join(' ');
+
+            // Store data in sessionStorage
+            sessionStorage.setItem('cardTitle', title);
+            sessionStorage.setItem('cardName', firstName);
+            sessionStorage.setItem('cardSurname', surname);
+            sessionStorage.setItem('cardQualification', qualification);
+            sessionStorage.setItem('cardStudentNumber', studentNumber);
+
+            // Handle photo upload
+            if (photoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    sessionStorage.setItem('cardPhoto', e.target.result);
+                    // Redirect to preview page after photo is loaded
+                    window.location.href = '/student-card-preview';
+                };
+                reader.readAsDataURL(photoFile);
+            } else {
+                // If no photo, redirect immediately
+                window.location.href = '/student-card-preview';
+            }
+        });
+    </script>
+</body>
+</html> 

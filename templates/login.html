@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <title>Login - University of Mpumalanga</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        .bg-image {
+            background-image: url("{{ url_for('static', filename='images/10yrs.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .bg-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        .content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            margin: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .error-message { display: none; color: #dc2626; background-color: #fee2e2; border: 1px solid #fecaca; border-radius: 0.375rem; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.875rem; }
+        .error-message.show { display: block; }
+        .success-message { display: none; color: #059669; background-color: #d1fae5; border: 1px solid #a7f3d0; border-radius: 0.375rem; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.875rem; }
+        .success-message.show { display: block; }
+        .password-match-error {
+            display: none;
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        .password-match-error.show {
+            display: block;
+        }
+        .input-error {
+            border-color: #dc2626 !important;
+            box-shadow: 0 0 0 1px #dc2626 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-image">
+        <div class="bg-overlay"></div>
+        <div class="content">
+            <div class="form-container">
+                <div class="text-center">
+                    <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="UMP Logo" class="mx-auto h-12 w-auto">
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+                <div id="successMessage" class="success-message"></div>
+
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800">Sign in to your account</h2>
+                </div>
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="mb-3 p-2 rounded-md text-sm {% if category == 'error' %}bg-red-100 border border-red-400 text-red-700{% else %}bg-green-100 border border-green-400 text-green-700{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Login Form -->
+                <form method="POST" action="" class="mt-8 space-y-6">
+                    <div class="rounded-md shadow-sm space-y-4">
+                        <div>
+                            <label for="account_type" class="block text-sm font-medium text-gray-700">Account Type</label>
+                            <select id="account_type" name="account_type" required
+                                class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-xs">
+                                <option value="student" selected>Student</option>
+                                <option value="staff">Staff</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input id="email" name="email" type="email" required
+                                pattern="^[a-zA-Z0-9._%+-]+@[Uu][Mm][Pp]\.ac\.za$"
+                                title="Please enter your University of Mpumalanga email address (@ump.ac.za)"
+                                class="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-xs"
+                                placeholder="Enter your email address"
+                                oninput="validateEmail(this)">
+                            <div id="emailError" class="password-match-error">Please enter a valid University of Mpumalanga email address (@ump.ac.za)</div>
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <div class="relative">
+                                <input id="password" name="password" type="password" required
+                                    class="appearance-none rounded-md relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 text-xs"
+                                    placeholder="Enter your password">
+                                <!-- Password Toggle Button -->
+                                <button type="button" class="absolute inset-y-0 right-0 flex items-center pr-3" onclick="togglePassword('password', this)">
+                                    <svg class="eye-open h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <svg class="eye-closed h-5 w-5 text-gray-500 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.97 9.97 0 012.36-4.362m3.64-2.295A9.953 9.953 0 0112 5c4.477 0 8.268 2.943 9.542 7a9.973 9.973 0 01-4.685 5.659M15 12a3 3 0 11-6 0 3 3 0 016 0zM3 3l18 18" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm">
+                            <a href="{{ url_for('forgot_password') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                Forgot password?
+                            </a>
+                        </div>
+                        <div class="text-sm">
+                            <a href="{{ url_for('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                                Don't have an account? Create one
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="related-content text-white text-center max-w-xl mx-auto px-4">
+            <h3 class="text-xl font-bold">Create Your Student Card</h3>
+            <p>Register to create your digital student card. This card will be your official identification and access key for all campus facilities.</p>
+        </div>
+    </div>
+
+    <script>
+    function togglePassword(inputId, button) {
+        const input = document.getElementById(inputId);
+        const eyeOpen = button.querySelector(".eye-open");
+        const eyeClosed = button.querySelector(".eye-closed");
+
+        if (input.type === "password") {
+            input.type = "text";
+            eyeOpen.classList.add("hidden");
+            eyeClosed.classList.remove("hidden");
+        } else {
+            input.type = "password";
+            eyeClosed.classList.add("hidden");
+            eyeOpen.classList.remove("hidden");
+        }
+    }
+
+    function validateEmail(input) {
+        const email = input.value.toLowerCase();
+        const emailError = document.getElementById('emailError');
+        const isValid = email.endsWith('@ump.ac.za');
+        
+        if (email && !isValid) {
+            emailError.classList.add('show');
+            input.classList.add('input-error');
+        } else {
+            emailError.classList.remove('show');
+            input.classList.remove('input-error');
+        }
+    }
+    </script>
+</body>
+</html>

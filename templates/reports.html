@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Reports - Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        .dashboard-header {
+            background-color: #1a365d;
+            color: #fff;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #1a365d;
+        }
+
+        .card p {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+            color: #ff6600;
+        }
+
+        .card .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: #1a365d;
+        }
+
+        /* Dashboard table for more details (optional) */
+        .report-table {
+            margin-top: 40px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .report-table th, .report-table td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .report-table th {
+            background-color: #1a365d;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .report-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #1a365d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2a4365;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-header">
+        Activity
+    </div>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card">
+                <div class="icon">👥</div>
+                <h2>Student Accounts Created</h2>
+                <p>{{ student_accounts_count }}</p>
+            </div>
+            <div class="card">
+                <div class="icon">🎓</div>
+                <h2>Student Cards Approved</h2>
+                <p>{{ student_cards_count }}</p>
+            </div>
+            <div class="card">
+                <div class="icon">👔</div>
+                <h2>Staff Accounts Created</h2>
+                <p>{{ staff_accounts_count }}</p>
+            </div>
+            <div class="card">
+                <div class="icon">👨‍🏫</div>
+                <h2>Staff Cards Approved</h2>
+                <p>{{ staff_cards_count }}</p>
+            </div>
+            <div class="card">
+                <div class="icon">🛠️</div>
+                <h2>Reported Problems / Tickets</h2>
+                <p>{{ tickets_count }}</p>
+            </div>
+        </div>
+
+        <!-- Optional detailed report table -->
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Report Type</th>
+                    <th>Count</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Student Accounts Created</td>
+                    <td>{{ student_accounts_count }}</td>
+                    <td>Total student registrations</td>
+                </tr>
+                <tr>
+                    <td>Student Cards Created</td>
+                    <td>{{ student_cards_count }}</td>
+                    <td>Actual student cards generated</td>
+                </tr>
+                <tr>
+                    <td>Staff Accounts Created</td>
+                    <td>{{ staff_accounts_count }}</td>
+                    <td>Total staff registrations</td>
+                </tr>
+                <tr>
+                    <td>Staff Cards Created</td>
+                    <td>{{ staff_cards_count }}</td>
+                    <td>Actual staff cards generated</td>
+                </tr>
+                <tr>
+                    <td>Reported Problems</td>
+                    <td>{{ tickets_count }}</td>
+                    <td>Pending / resolved issues</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('index') }}"  class="back-button">Back to home</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Student Profile - University of Mpumalanga</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .profile-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            display: block;
+            border-radius: 50%;
+            background: white;
+            padding: 10px;
+        }
+
+        .university-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .campus-name {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #48bb78;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            object-fit: cover;
+            object-position: center top;
+            margin: -75px auto 20px;
+            display: block;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .student-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .student-title {
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .student-number {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .footer {
+            background: #f7fafc;
+            padding: 15px;
+            text-align: center;
+            color: #718096;
+            font-size: 12px;
+        }
+
+        .qr-info {
+            background: #e6fffa;
+            border: 1px solid #81e6d9;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .qr-info h3 {
+            color: #2c7a7b;
+            margin-bottom: 10px;
+        }
+
+        .qr-info p {
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .profile-container {
+                margin: 0;
+                max-width: 100%;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .university-logo {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .university-name {
+                font-size: 16px;
+            }
+            
+            .campus-name {
+                font-size: 12px;
+            }
+            
+            .verified-badge {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            
+            .profile-photo {
+                width: 120px;
+                height: 120px;
+                margin: -60px auto 20px;
+                border: 4px solid white;
+            }
+            
+            .profile-info {
+                padding: 15px;
+            }
+            
+            .student-name {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+            
+            .student-title {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+            
+            .info-grid {
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+            
+            .info-item {
+                padding: 12px;
+            }
+            
+            .info-label {
+                font-size: 11px;
+                margin-bottom: 4px;
+            }
+            
+            .info-value {
+                font-size: 14px;
+                word-break: break-word;
+            }
+            
+            .student-number {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .qr-info {
+                margin: 15px;
+                padding: 12px;
+            }
+            
+            .qr-info h3 {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            
+            .qr-info p {
+                font-size: 12px;
+            }
+            
+            .footer {
+                padding: 12px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="header">
+            <div class="verified-badge">✓ Verified</div>
+            <img src="{{ url_for('static', filename='images/logo2.png') }}" alt="UMP Logo" class="university-logo">
+            <div class="university-name">University of Mpumalanga</div>
+            <div class="campus-name">{{ card_data.campus or 'Mbombela Campus' }}</div>
+        </div>
+
+        {% if card_data and card_data.photo_path %}
+            <img src="{{ url_for('static', filename=card_data.photo_path) }}" alt="Student Photo" class="profile-photo" onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/user.jpg') }}';">
+        {% else %}
+            <img src="{{ url_for('static', filename='images/user.jpg') }}" alt="Student Photo" class="profile-photo">
+        {% endif %}
+
+        <div class="profile-info">
+            <div class="student-name">{{ card_data.name }} {{ card_data.surname }}</div>
+            <div class="student-title">{{ card_data.title }}</div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Qualification</div>
+                    <div class="info-value">{{ card_data.qualification }}</div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ card_data.email }}</div>
+                </div>
+            </div>
+
+            <div class="student-number">
+                Student Number: {{ card_data.student_number }}
+            </div>
+        </div>
+
+        <div class="qr-info">
+            <h3>📱 QR Code Scanned</h3>
+            <p>This is the official student profile for University of Mpumalanga. The information displayed is verified and up-to-date.</p>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 University of Mpumalanga. All rights reserved.</p>
+            <p>This profile was accessed via QR code scan</p>
+        </div>
+    </div>
+</body>
+</html> 
