@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: ump-digital-card
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 3306
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: MAIL_SERVER
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: 587
+      - key: MAIL_USE_TLS
+        value: True
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_DEFAULT_SENDER
+        sync: false
+      - key: SUPPORT_RECIPIENT
+        sync: false
+      - key: PROFILE_BASE_URL
+        sync: false
+
