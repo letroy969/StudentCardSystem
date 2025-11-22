@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_file, abort, get_flashed_messages
 from flask_mail import Mail, Message
 from datetime import datetime, timedelta
-import mysql.connector
+import psycopg2
+from psycopg2 import Error as Psycopg2Error
 import os
 from werkzeug.utils import secure_filename
 import hashlib
@@ -10,6 +11,7 @@ import qrcode
 from io import BytesIO
 import base64
 from dotenv import load_dotenv
+from database import get_db_connection
 try:
     import cv2
     import numpy as np
@@ -35,14 +37,8 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', app.config[
 mail = Mail(app)
 SUPPORT_RECIPIENT = os.getenv('SUPPORT_RECIPIENT', app.config['MAIL_DEFAULT_SENDER'])
 
-# MySQL connection configuration
-DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'localhost'),
-    'user': os.getenv('DB_USER', 'root'),  # Change if your MySQL user is different
-    'password': os.getenv('DB_PASSWORD', 'letroy70'),
-    'database': os.getenv('DB_NAME', 'student_card_db'),
-    'port': int(os.getenv('DB_PORT', '3306'))
-}
+# Database connection is now handled by database.py module
+# It supports both DATABASE_URL (Render) and individual environment variables
 
 def normalize_security_answer(answer: str) -> str:
     """Normalize security answers by removing spaces and casing."""
@@ -89,8 +85,12 @@ UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB max file size
 
+# Ensure upload folder exists (works in both local and Render)
 if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+    try:
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    except OSError as e:
+        print(f"Warning: Could not create upload folder: {e}")
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -101,22 +101,27 @@ def get_profile_base_url():
     """Get the base URL for profile links, works in both local and production."""
     from flask import request
     
-    # Check for environment variable first (for production)
+    # Check for environment variable first (for production) - highest priority
     profile_base = os.getenv('PROFILE_BASE_URL')
     if profile_base:
         return profile_base.rstrip('/')
     
-    # In production (Render), use request.host with HTTPS
-    if os.getenv('FLASK_ENV') == 'production' or os.getenv('RENDER'):
+    # Detect Render environment - Render sets RENDER_EXTERNAL_URL
+    render_url = os.getenv('RENDER_EXTERNAL_URL')
+    if render_url:
+        return render_url.rstrip('/')
+    
+    # Check if we're in production environment
+    is_production = os.getenv('FLASK_ENV') == 'production' or os.getenv('RENDER') == 'true'
+    
+    if is_production:
         try:
+            # In production, use request.host with HTTPS
             scheme = 'https' if request.is_secure or os.getenv('RENDER') else 'http'
             return f"{scheme}://{request.host}"
         except RuntimeError:
-            # Outside request context, use RENDER_EXTERNAL_URL if available
-            render_url = os.getenv('RENDER_EXTERNAL_URL')
-            if render_url:
-                return render_url.rstrip('/')
-            return 'https://your-app.onrender.com'  # Fallback
+            # Outside request context, fallback
+            return 'https://your-app.onrender.com'  # Fallback - should be overridden by PROFILE_BASE_URL
     
     # Local development: try to get local IP, fallback to request.host
     try:
@@ -132,13 +137,8 @@ def get_profile_base_url():
         except RuntimeError:
             return "http://localhost:5000"
 
-def get_db_connection():
-    try:
-        conn = mysql.connector.connect(**DB_CONFIG, charset='utf8mb4', collation='utf8mb4_unicode_ci')
-        return conn
-    except Exception as e:
-        print(f"Database connection failed: {e}")
-        return None
+# get_db_connection() is now imported from database.py
+# It handles PostgreSQL connections with DATABASE_URL support
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -533,12 +533,15 @@ def index():
 def test_db():
     try:
         conn = get_db_connection()
+        if not conn:
+            return "Database connection failed: Could not establish connection"
         cursor = conn.cursor()
-        cursor.execute('SELECT NOW();')
+        cursor.execute('SELECT NOW() as current_time;')
         result = cursor.fetchone()
         cursor.close()
         conn.close()
-        return f"Database connected! Current time: {result[0]}"
+        # RealDictCursor returns a dict, so access by key
+        return f"Database connected! Current time: {result['current_time']}"
     except Exception as e:
         return f"Database connection failed: {e}"
 
@@ -656,7 +659,7 @@ def login():
                 flash('Database connection failed. Please try again later.', 'error')
                 return redirect(url_for('login'))
 
-            cursor = conn.cursor(dictionary=True)
+            cursor = conn.cursor()
             cursor.execute('SELECT * FROM users WHERE LOWER(email) = %s', (email,))
             user = cursor.fetchone()
 
@@ -707,7 +710,7 @@ def forgot_password():
                     flash('Database connection failed. Please try again later.', 'error')
                     return redirect(url_for('forgot_password'))
                 
-                cursor = conn.cursor(dictionary=True)
+                cursor = conn.cursor()
                 cursor.execute('SELECT security_id_number_hash, security_mother_name_hash FROM users WHERE LOWER(email) = %s', (email,))
                 user = cursor.fetchone()
                 
@@ -760,7 +763,7 @@ def forgot_password():
                     flash('Database connection failed. Please try again later.', 'error')
                     return redirect(url_for('forgot_password'))
                 
-                cursor = conn.cursor(dictionary=True)
+                cursor = conn.cursor()
                 cursor.execute('SELECT security_id_number_hash, security_mother_name_hash FROM users WHERE LOWER(email) = %s', (email.lower(),))
                 user = cursor.fetchone()
                 cursor.close()
@@ -1204,7 +1207,7 @@ def public_profile(user_email):
     try:
         conn = get_db_connection()
         if conn:
-            cursor = conn.cursor(dictionary=True)
+            cursor = conn.cursor()
             
             # Check lecture_cards first
             cursor.execute('SELECT * FROM lecture_cards WHERE email = %s', (user_email,))
@@ -1280,7 +1283,7 @@ def card_status():
             conn = get_db_connection()
             if not conn:
                 return {'card_status': 'error', 'message': 'Database connection failed'}
-            cursor = conn.cursor(dictionary=True)
+            cursor = conn.cursor()
             cursor.execute('SELECT * FROM student_cards WHERE email = %s', (session['user'],))
             card_data = cursor.fetchone()
             
@@ -1413,7 +1416,7 @@ def update_lecture_card():
             # Get existing card data from database
             conn = get_db_connection()
             if conn:
-                cursor = conn.cursor(dictionary=True)
+                cursor = conn.cursor()
                 cursor.execute('SELECT title, name, surname, qualification, employee_number FROM lecture_cards WHERE email = %s', (session['user'],))
                 existing_data = cursor.fetchone()
                 cursor.close()
@@ -1669,31 +1672,31 @@ def reports():
         cursor = conn.cursor()
 
         # Count student accounts created from users table
-        cursor.execute("SELECT COUNT(*) FROM users WHERE account_type = 'student'")
+        cursor.execute("SELECT COUNT(*) as count FROM users WHERE account_type = 'student'")
         result = cursor.fetchone()
-        student_accounts_count = result[0] if result else 0
+        student_accounts_count = result['count'] if result else 0
 
         # Count student cards created from student_cards table
-        cursor.execute("SELECT COUNT(*) FROM student_cards")
+        cursor.execute("SELECT COUNT(*) as count FROM student_cards")
         result = cursor.fetchone()
-        student_cards_count = result[0] if result else 0
+        student_cards_count = result['count'] if result else 0
 
         # Count staff accounts created from users table
-        cursor.execute("SELECT COUNT(*) FROM users WHERE account_type = 'staff'")
+        cursor.execute("SELECT COUNT(*) as count FROM users WHERE account_type = 'staff'")
         result = cursor.fetchone()
-        staff_accounts_count = result[0] if result else 0
+        staff_accounts_count = result['count'] if result else 0
 
         # Count staff cards created from lecture_cards table
-        cursor.execute("SELECT COUNT(*) FROM lecture_cards")
+        cursor.execute("SELECT COUNT(*) as count FROM lecture_cards")
         result = cursor.fetchone()
-        staff_cards_count = result[0] if result else 0
+        staff_cards_count = result['count'] if result else 0
 
         # Count support tickets/problems
-        cursor.execute("SELECT COUNT(*) FROM support_tickets")
+        cursor.execute("SELECT COUNT(*) as count FROM support_tickets")
         result = cursor.fetchone()
-        tickets_count = result[0] if result else 0
+        tickets_count = result['count'] if result else 0
 
-    except mysql.connector.Error as e:
+    except Psycopg2Error as e:
         print(f"Database error in reports: {e}")
         # Keep default values of 0
     except Exception as e:

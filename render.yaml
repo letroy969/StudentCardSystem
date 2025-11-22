@@ -11,10 +11,13 @@ services:
         value: production
       - key: SECRET_KEY
         generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      # Alternative: Individual DB variables (for local dev or non-Render PostgreSQL)
       - key: DB_HOST
         sync: false
       - key: DB_PORT
-        value: 3306
+        value: 5432
       - key: DB_NAME
         sync: false
       - key: DB_USER
@@ -26,7 +29,7 @@ services:
       - key: MAIL_PORT
         value: 587
       - key: MAIL_USE_TLS
-        value: True
+        value: "True"
       - key: MAIL_USERNAME
         sync: false
       - key: MAIL_PASSWORD

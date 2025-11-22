@@ -14,153 +14,248 @@ Flask application that lets University of Mpumalanga students and lecturers gene
 - Reports view (accounts, cards, tickets)
 - Public profile pages accessible via QR
 
-Tech stack: Flask 3, MySQL (mysql-connector-python), Tailwind-styled templates, OpenCV/Pillow, qrcode, Gunicorn.
+**Tech stack**: Flask 3, PostgreSQL (psycopg2-binary), Tailwind-styled templates, OpenCV/Pillow, qrcode, Gunicorn.
 
 ---
 
 ## Prerequisites
 
-| Component | Local Dev | Render/PlanetScale |
-|-----------|-----------|--------------------|
-| Python    | 3.11+     | Managed by Render  |
-| MySQL     | 8.x (local) | PlanetScale free tier |
-| pip       | Latest    | n/a                |
+| Component | Local Dev | Render |
+|-----------|-----------|--------|
+| Python    | 3.11+     | Managed by Render |
+| PostgreSQL | 14+ (local) | Render PostgreSQL (free tier) |
+| pip       | Latest    | n/a |
 
 ---
 
-## Local development
+## Quick Deploy to Render
 
-1. **Clone & install**
-   ```bash
-   git clone <repo-url> && cd card1
-   python -m venv .venv
-   .\.venv\Scripts\activate    # or source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+### 1. One-Click Setup
 
-2. **Configure environment**
-   ```bash
-   copy env.example .env   # Windows
-   # or
-   cp env.example .env     # macOS/Linux
-   ```
-   Update `.env` values (database, email, secret key). `app.py` already loads them via `python-dotenv`.
+1. **Fork/Clone this repository**
+2. **Create Render account**: [render.com](https://render.com)
+3. **Create PostgreSQL database** in Render
+4. **Create Web Service** in Render:
+   - Connect your GitHub repository
+   - Render auto-detects `render.yaml` configuration
+   - Link PostgreSQL database (auto-sets `DATABASE_URL`)
+   - Set environment variables (see below)
+5. **Initialize database**: Run `database_setup_postgresql.sql` in Render PostgreSQL console
+6. **Add Render Disk**: For file persistence (see setup guide)
+7. **Deploy!** Render auto-deploys on git push
 
-3. **Create database schema**
-   ```bash
-   mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS student_card_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-   python setup_database.py
-   ```
+### 2. Environment Variables (Set in Render Dashboard)
 
-4. **Run the server**
-   ```bash
-   python app.py
-   ```
-   Visit `http://localhost:5000`.
+```
+FLASK_ENV=production
+SECRET_KEY=<generate-random-64-char-hex>
+DATABASE_URL=<auto-provided-by-render-when-database-linked>
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=<gmail-16-char-app-password>
+MAIL_DEFAULT_SENDER=your-email@gmail.com
+SUPPORT_RECIPIENT=your-email@gmail.com
+PROFILE_BASE_URL=https://your-app.onrender.com
+```
 
----
+**Note**: `DATABASE_URL` is automatically set when you link PostgreSQL database to your web service!
 
-## Production deployment options
+### 3. Complete Setup Guide
 
-### Option 1: Render + PlanetScale (Recommended for simplicity)
-
-### 1. Prepare repo
-- Ensure `requirements.txt`, `Procfile`, and `env.example` are committed (already done).
-- Push latest code to GitHub.
-
-### 2. PlanetScale (database)
-1. Create an account at [planetscale.com](https://planetscale.com/).
-2. Create a database (e.g. `student_card_db`), enable a production branch.
-3. Download credentials and note host/user/password.
-4. Import schema:
-   ```bash
-   pscale connect student_card_db main --execute "SOURCE database_setup.sql;"
-   ```
-
-### 3. Render (Flask app)
-1. Create a new **Web Service** pointing to the GitHub repo.
-2. Build command: `pip install -r requirements.txt`
-3. Start command: `gunicorn app:app`
-4. Environment variables (Render → Settings → Environment):
-   ```
-   FLASK_ENV=production
-   SECRET_KEY=<random_string>
-   DB_HOST=<planetscale-host>
-   DB_PORT=3306
-   DB_NAME=student_card_db
-   DB_USER=<planetscale-user>
-   DB_PASSWORD=<planetscale-password>
-   MAIL_SERVER=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USE_TLS=True
-   MAIL_USERNAME=<your_gmail>
-   MAIL_PASSWORD=<app_password>
-   MAIL_DEFAULT_SENDER=<your_gmail>
-   SUPPORT_RECIPIENT=<support inbox>
-   PROFILE_BASE_URL=https://your-app.onrender.com
-   ```
-   **Note:** Set `PROFILE_BASE_URL` to your Render app URL (provided after first deploy) so QR codes point to the correct domain.
-5. Deploy – Render will provide an HTTPS URL.
-
-### 4. Optional: custom domain
-- Add CNAME pointing to Render.
-- Update `PROFILE_BASE_URL` env var to your custom domain.
+See **[STEP_BY_STEP_SETUP.md](STEP_BY_STEP_SETUP.md)** for detailed step-by-step instructions.
 
 ---
 
-### Option 2: Fly.io + PlanetScale (Best free tier)
+## Local Development
 
-**Why Fly.io?**
-- ✅ Generous free tier: 3 VMs, 3GB persistent storage, 160GB transfer/month
-- ✅ Persistent file storage (volumes) for uploads
-- ✅ Global edge deployment
-- ✅ Automatic HTTPS
+### 1. Clone & Install
 
-**Quick Setup:**
-1. Install Fly CLI: `powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"`
-2. Sign up: `fly auth signup`
-3. Deploy: `fly launch` (follow prompts)
-4. Create volume: `fly volumes create uploads_volume --region iad --size 3`
-5. Set secrets: `fly secrets set SECRET_KEY="..." DB_HOST="..."` (see `DEPLOY_FLY.md`)
-6. Deploy: `fly deploy`
+```bash
+git clone <repo-url> && cd card1
+python -m venv .venv
+.\.venv\Scripts\activate    # Windows
+# or
+source .venv/bin/activate   # macOS/Linux
+pip install -r requirements.txt
+```
 
-See `DEPLOY_FLY.md` for detailed Fly.io deployment instructions.
+### 2. Configure Environment
+
+```bash
+copy env.example .env   # Windows
+# or
+cp env.example .env     # macOS/Linux
+```
+
+Update `.env` with your PostgreSQL credentials:
+```bash
+DATABASE_URL=postgresql://postgres:password@localhost:5432/student_card_db
+# OR use individual variables:
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=student_card_db
+DB_USER=postgres
+DB_PASSWORD=your_password
+```
+
+### 3. Create Database & Schema
+
+```bash
+# Create PostgreSQL database
+createdb student_card_db
+
+# Initialize schema
+python setup_database_postgresql.py
+# OR manually:
+psql student_card_db < database_setup_postgresql.sql
+```
+
+### 4. Run the Server
+
+```bash
+python app.py
+```
+
+Visit `http://localhost:5000`.
 
 ---
 
-## Database utilities
-- `database_setup.sql` – raw DDL (students, lectures, users, tickets).
-- `setup_database.py` – idempotent Python script that creates tables/columns.
+## Production Deployment (Render)
+
+### Prerequisites
+
+- GitHub repository with code
+- Render account (free tier available)
+- Gmail account with App Password enabled
+
+### Deployment Steps
+
+1. **Create PostgreSQL Database** in Render
+   - Render Dashboard → "New +" → "PostgreSQL"
+   - Note: Render provides `DATABASE_URL` automatically
+
+2. **Create Web Service** in Render
+   - Connect GitHub repository
+   - Render auto-detects `render.yaml`
+   - Link PostgreSQL database (sets `DATABASE_URL` automatically)
+   - Set environment variables
+
+3. **Initialize Database Schema**
+   - Render PostgreSQL → Connect → psql
+   - Run `database_setup_postgresql.sql`
+
+4. **Add Render Disk** (for file persistence)
+   - Settings → Disks → Add Disk
+   - Mount: `/opt/render/project/src/static/uploads`
+   - Size: 1GB
+
+5. **Deploy**
+   - Render auto-deploys on git push
+   - Or manually trigger deploy
+
+**Full Guide**: See **[STEP_BY_STEP_SETUP.md](STEP_BY_STEP_SETUP.md)**
 
 ---
 
-## Useful scripts
+## Database Schema
+
+The application uses PostgreSQL with these tables:
+
+- `users` - Authentication and user accounts
+- `student_cards` - Student digital ID cards
+- `lecture_cards` - Lecturer digital ID cards
+- `support_tickets` - Support ticket system
+
+**Schema File**: `database_setup_postgresql.sql`
+
+**Initialization Script**: `setup_database_postgresql.py`
+
+---
+
+## Project Structure
+
+```
+.
+├── app.py                          # Main Flask application
+├── database.py                     # PostgreSQL connection module
+├── database_setup_postgresql.sql  # PostgreSQL schema
+├── setup_database_postgresql.py   # Database initialization
+├── requirements.txt                # Python dependencies
+├── render.yaml                     # Render deployment config
+├── Procfile                        # Process file for Render
+├── runtime.txt                     # Python version
+├── env.example                     # Environment variables template
+├── static/                         # Static files (CSS, images, uploads)
+└── templates/                      # HTML templates
+```
+
+---
+
+## Environment Variables
+
+See `env.example` for the full list. Critical ones:
+
+| Variable | Purpose | Required |
+|----------|---------|----------|
+| `DATABASE_URL` | PostgreSQL connection (Render auto-provides) | Yes |
+| `SECRET_KEY` | Flask session/key signing | Yes |
+| `MAIL_*` | Email configuration | Yes |
+| `PROFILE_BASE_URL` | Base URL for QR codes | After deploy |
+
+---
+
+## Useful Commands
 
 | Command | Description |
 |---------|-------------|
-| `python setup_database.py` | Creates/updates MySQL schema |
-| `python app.py` | Run Flask dev server (`host=0.0.0.0`, port 5000) |
-| `gunicorn app:app` | Production WSGI server (Procfile uses this) |
+| `python setup_database_postgresql.py` | Initialize PostgreSQL schema |
+| `python app.py` | Run Flask dev server |
+| `gunicorn app:app` | Production WSGI server |
 
 ---
 
-## Environment variables
-See `env.example` for the full list. Critical ones:
+## Support & Troubleshooting
 
-| Variable | Purpose |
-|----------|---------|
-| `SECRET_KEY` | Flask session/key signing (REQUIRED) |
-| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | MySQL connection (REQUIRED) |
-| `MAIL_*`, `SUPPORT_RECIPIENT` | Email notifications |
-| `PROFILE_BASE_URL` (optional) | Base URL for QR code profile links (auto-detected if not set) |
+### Database Connection Issues
+- Verify `DATABASE_URL` is set (Render provides this automatically)
+- Check PostgreSQL database is linked to web service
+- Ensure schema is initialized
+
+### File Upload Issues
+- Add Render Disk for file persistence
+- Verify disk mount path matches upload folder
+
+### Email Not Sending
+- Verify Gmail App Password (16 characters)
+- Check 2FA is enabled on Gmail
+- Verify `MAIL_USE_TLS=True` (string)
+
+### Deployment Issues
+- Check Render logs: Dashboard → Service → Logs
+- Verify all environment variables are set
+- Ensure `requirements.txt` has all dependencies
+
+**Full Troubleshooting**: See **[STEP_BY_STEP_SETUP.md](STEP_BY_STEP_SETUP.md)** → Troubleshooting section
 
 ---
 
-## Support & troubleshooting
-- Verify MySQL connectivity (`mysql -h host -u user -p`).
-- Check Render logs if deployment fails (`render.com` dashboard → Logs).
-- Face detection requires OpenCV; ensure Render build uses a Python version with wheel support (3.11 works).
-- For local QR profile testing on mobile, use your machine’s LAN IP (e.g. `http://10.x.x.x:5000/profile/...`).
+## Documentation
 
-Happy shipping! 🚀
+- **[STEP_BY_STEP_SETUP.md](STEP_BY_STEP_SETUP.md)** - Complete deployment guide
+- **[POSTGRESQL_MIGRATION_GUIDE.md](POSTGRESQL_MIGRATION_GUIDE.md)** - PostgreSQL migration details
+- **[RENDER_COMPATIBILITY_CHECK.md](RENDER_COMPATIBILITY_CHECK.md)** - Render compatibility verification
+- **[FINAL_RENDER_VERIFICATION.md](FINAL_RENDER_VERIFICATION.md)** - Final verification summary
 
+---
+
+## License
+
+This project is for University of Mpumalanga use.
+
+---
+
+**Ready to deploy!** 🚀
+
+Follow **[STEP_BY_STEP_SETUP.md](STEP_BY_STEP_SETUP.md)** for step-by-step deployment instructions.
