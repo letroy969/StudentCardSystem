@@ -33,6 +33,12 @@ Thumbs.db
 static/uploads/*
 !static/uploads/.gitkeep
 
+# Large binary files and folders (should not be in repo)
+MySQL/
+cmake-*/
+*.exe
+*.dll
+
 # Logs
 *.log
 
