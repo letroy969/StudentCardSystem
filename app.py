@@ -99,8 +99,6 @@ def allowed_file(filename):
 
 def get_profile_base_url():
     """Get the base URL for profile links, works in both local and production."""
-    from flask import request
-    
     # Check for environment variable first (for production) - highest priority
     profile_base = os.getenv('PROFILE_BASE_URL')
     if profile_base:
@@ -894,7 +892,7 @@ def dashboard():
         if not conn:
             flash('Database connection failed!', 'error')
             return redirect(url_for('student_card_preview'))
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM student_cards WHERE email = %s', (session['user'],))
         card_data = cursor.fetchone()
         if card_data is not None:
@@ -927,7 +925,7 @@ def student_card_preview():
         if not conn:
             flash('Database connection failed!', 'error')
             return redirect(url_for('student_card_preview'))
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM student_cards WHERE email = %s', (session['user'],))
         card_data = cursor.fetchone()
         if card_data is not None:
@@ -1319,7 +1317,7 @@ def lecture_dashboard():
         if not conn:
             flash('Database connection failed!', 'error')
             return redirect(url_for('login'))
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM lecture_cards WHERE email = %s', (session['user'],))
         card_data = cursor.fetchone()
         if card_data and card_data.get('campus'):
@@ -1346,7 +1344,7 @@ def lecture_card_preview():
         if not conn:
             flash('Database connection failed!', 'error')
             return redirect(url_for('lecture_dashboard'))
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute('SELECT * FROM lecture_cards WHERE email = %s', (session['user'],))
         card_data = cursor.fetchone()
         if card_data and card_data.get('campus'):
@@ -1571,7 +1569,7 @@ def update_lecture_card():
                     if not verif_employee_number or not verif_full_name:
                         conn_check = get_db_connection()
                         if conn_check:
-                            cursor_check = conn_check.cursor(dictionary=True)
+                            cursor_check = conn_check.cursor()
                             cursor_check.execute('SELECT employee_number, name, surname FROM lecture_cards WHERE email = %s', (session['user'],))
                             existing_data = cursor_check.fetchone()
                             cursor_check.close()
