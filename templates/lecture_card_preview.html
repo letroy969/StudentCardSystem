@@ -34,6 +34,18 @@
         .student-card.downloading {
             transform: none !important;
         }
+        
+        /* Mobile responsive - only applies to screens < 768px */
+        @media (max-width: 767px) {
+            .student-card {
+                width: 90%;
+                max-width: 340px;
+                height: auto;
+                aspect-ratio: 1.58 / 1;
+                transform: scale(1);
+                margin: 10px auto;
+            }
+        }
 
         @keyframes cardAppear {
             from {
