@@ -15,10 +15,10 @@ Copy these into Render Dashboard → Environment:
 ✅ MAIL_SERVER=smtp.gmail.com
 ✅ MAIL_PORT=587
 ✅ MAIL_USE_TLS=True
-✅ MAIL_USERNAME=umpdigitalcard@gmail.com
+✅ MAIL_USERNAME=umpdigitalc@gmail.com
 ✅ MAIL_PASSWORD=<16-char-gmail-app-password>
-✅ MAIL_DEFAULT_SENDER=umpdigitalcard@gmail.com
-✅ SUPPORT_RECIPIENT=umpdigitalcard@gmail.com
+✅ MAIL_DEFAULT_SENDER=umpdigitalc@gmail.com
+✅ SUPPORT_RECIPIENT=umpdigitalc@gmail.com
 ⏳ PROFILE_BASE_URL=<set-after-first-deploy>
 ```
 
