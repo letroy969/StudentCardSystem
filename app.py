@@ -1357,9 +1357,13 @@ def public_profile(user_email):
 @app.route('/submit-ticket', methods=['GET', 'POST'])
 def submit_ticket():
     try:
+        # Check session first
         if 'user' not in session:
+            flash('Please log in to submit a support ticket.', 'info')
             return redirect(url_for('login'))
+        
         success = error = None
+        
         if request.method == 'POST':
             subject = request.form.get('subject', '').strip()
             message = request.form.get('message', '').strip()
@@ -1376,25 +1380,11 @@ def submit_ticket():
                         error = 'Database connection failed. Please try again later.'
                     else:
                         cursor = conn.cursor()
-                        # Check if table exists
-                        cursor.execute("""
-                            SELECT EXISTS (
-                                SELECT FROM information_schema.tables 
-                                WHERE table_schema = 'public' 
-                                AND table_name = 'support_tickets'
-                            );
-                        """)
-                        table_exists = cursor.fetchone()['exists']
-                        
-                        if not table_exists:
-                            error = 'Database tables not initialized. Please contact administrator or visit /init-db to initialize.'
-                            cursor.close()
-                            conn.close()
-                        else:
-                            cursor.execute('INSERT INTO support_tickets (email, subject, message) VALUES (%s, %s, %s)', (email, subject, message))
-                            conn.commit()
-                            cursor.close()
-                            conn.close()
+                        # Insert ticket directly (table check removed since user confirmed table exists)
+                        cursor.execute('INSERT INTO support_tickets (email, subject, message) VALUES (%s, %s, %s)', (email, subject, message))
+                        conn.commit()
+                        cursor.close()
+                        conn.close()
                             
                             # Send email notification
                             try:
@@ -1416,13 +1406,24 @@ def submit_ticket():
                     import traceback
                     traceback.print_exc()
         
-        return render_template('submit_ticket.html', success=success, error=error)
+        try:
+            return render_template('submit_ticket.html', success=success, error=error)
+        except Exception as template_error:
+            import traceback
+            error_details = traceback.format_exc()
+            print(f"Template rendering error: {template_error}")
+            print(error_details)
+            return f"Template Error: {str(template_error)}<br><br><pre>{error_details}</pre>", 500
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
         print(f"Critical error in submit_ticket route: {e}")
         print(error_details)
-        return f"Internal Server Error: {str(e)}<br><br><pre>{error_details}</pre>", 500
+        # Return a simple error page instead of full traceback in production
+        if os.getenv('FLASK_ENV') == 'production':
+            return f"Internal Server Error. Please check logs for details.", 500
+        else:
+            return f"Internal Server Error: {str(e)}<br><br><pre>{error_details}</pre>", 500
 
 @app.route('/logout')
 def logout():
