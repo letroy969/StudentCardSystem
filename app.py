@@ -561,20 +561,69 @@ def init_database():
         with open(sql_file, 'r', encoding='utf-8') as f:
             sql_script = f.read()
         
-        # Execute SQL script
-        # Split by semicolon and execute each statement separately
-        statements = [s.strip() for s in sql_script.split(';') if s.strip() and not s.strip().startswith('--')]
+        # Remove comments and clean up
+        lines = []
+        for line in sql_script.split('\n'):
+            # Remove single-line comments
+            if '--' in line:
+                line = line[:line.index('--')]
+            lines.append(line)
+        sql_script = '\n'.join(lines)
         
+        # Execute SQL script properly handling PostgreSQL functions
+        # Use psycopg2's execute() which can handle multiple statements
+        # But we need to split carefully to handle dollar-quoted strings
         results = []
+        
+        # Split by semicolon, but preserve dollar-quoted strings
+        statements = []
+        current_statement = []
+        in_dollar_quote = False
+        dollar_tag = None
+        
+        for line in sql_script.split('\n'):
+            # Check for dollar-quoted strings
+            if '$$' in line:
+                # Find dollar tag (e.g., $$ or $tag$)
+                import re
+                dollar_matches = re.findall(r'\$[^$]*\$', line)
+                if dollar_matches:
+                    if not in_dollar_quote:
+                        in_dollar_quote = True
+                        dollar_tag = dollar_matches[0]
+                    elif dollar_matches[0] == dollar_tag:
+                        in_dollar_quote = False
+                        dollar_tag = None
+            
+            current_statement.append(line)
+            
+            # If we're not in a dollar quote and line ends with semicolon, it's a complete statement
+            if not in_dollar_quote and line.strip().endswith(';'):
+                statement = '\n'.join(current_statement).strip()
+                if statement and not statement.startswith('--'):
+                    statements.append(statement)
+                current_statement = []
+        
+        # Add any remaining statement
+        if current_statement:
+            statement = '\n'.join(current_statement).strip()
+            if statement and not statement.startswith('--'):
+                statements.append(statement)
+        
+        # Execute each statement
         for statement in statements:
-            if statement:
+            if statement.strip():
                 try:
                     cursor.execute(statement)
-                    results.append(f"✅ Executed: {statement[:50]}...")
+                    # Get first few words for display
+                    first_words = ' '.join(statement.split()[:3])
+                    results.append(f"✅ Executed: {first_words}...")
                 except Psycopg2Error as e:
+                    error_msg = str(e)
                     # Ignore "already exists" errors
-                    if "already exists" not in str(e).lower():
-                        results.append(f"⚠️  {statement[:50]}... - {str(e)}")
+                    if "already exists" not in error_msg.lower():
+                        first_words = ' '.join(statement.split()[:3])
+                        results.append(f"⚠️  {first_words}... - {error_msg[:100]}")
         
         conn.commit()
         
@@ -602,7 +651,7 @@ def init_database():
                 {'<li>' + '</li><li>'.join(table_list) + '</li>' if table_list else '<li>No tables found</li>'}
             </ul>
             <h2>Execution Results:</h2>
-            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">{chr(10).join(results)}</pre>
+            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto;">{chr(10).join(results)}</pre>
             <p><strong>✅ Your database is ready to use!</strong></p>
             <p><a href="/">Go to Homepage</a> | <a href="/test_db">Test Database Connection</a></p>
         </body>
@@ -611,7 +660,9 @@ def init_database():
         return html_response
         
     except Exception as e:
-        return f"❌ Error initializing database: {str(e)}"
+        import traceback
+        error_details = traceback.format_exc()
+        return f"❌ Error initializing database: {str(e)}<br><br><pre>{error_details}</pre>"
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
