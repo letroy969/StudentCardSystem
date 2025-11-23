@@ -543,6 +543,76 @@ def test_db():
     except Exception as e:
         return f"Database connection failed: {e}"
 
+@app.route('/init-db')
+def init_database():
+    """Initialize database schema - visit this URL once to create all tables."""
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return "❌ Database connection failed: Could not establish connection"
+        
+        cursor = conn.cursor()
+        
+        # Read SQL file
+        sql_file = 'database_setup_postgresql.sql'
+        if not os.path.exists(sql_file):
+            return f"❌ Error: {sql_file} not found!"
+        
+        with open(sql_file, 'r', encoding='utf-8') as f:
+            sql_script = f.read()
+        
+        # Execute SQL script
+        # Split by semicolon and execute each statement separately
+        statements = [s.strip() for s in sql_script.split(';') if s.strip() and not s.strip().startswith('--')]
+        
+        results = []
+        for statement in statements:
+            if statement:
+                try:
+                    cursor.execute(statement)
+                    results.append(f"✅ Executed: {statement[:50]}...")
+                except Psycopg2Error as e:
+                    # Ignore "already exists" errors
+                    if "already exists" not in str(e).lower():
+                        results.append(f"⚠️  {statement[:50]}... - {str(e)}")
+        
+        conn.commit()
+        
+        # Verify tables exist
+        cursor.execute("""
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            ORDER BY table_name;
+        """)
+        tables = cursor.fetchall()
+        
+        cursor.close()
+        conn.close()
+        
+        table_list = [table['table_name'] for table in tables]
+        
+        html_response = f"""
+        <html>
+        <head><title>Database Initialization</title></head>
+        <body style="font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto;">
+            <h1>✅ Database Initialization Complete!</h1>
+            <h2>Tables Created:</h2>
+            <ul>
+                {'<li>' + '</li><li>'.join(table_list) + '</li>' if table_list else '<li>No tables found</li>'}
+            </ul>
+            <h2>Execution Results:</h2>
+            <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">{chr(10).join(results)}</pre>
+            <p><strong>✅ Your database is ready to use!</strong></p>
+            <p><a href="/">Go to Homepage</a> | <a href="/test_db">Test Database Connection</a></p>
+        </body>
+        </html>
+        """
+        return html_response
+        
+    except Exception as e:
+        return f"❌ Error initializing database: {str(e)}"
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
