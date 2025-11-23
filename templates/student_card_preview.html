@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Student Card Preview</title>
+    <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -30,6 +31,18 @@
             transform-origin: center;
             margin: 20px auto;
             animation: cardAppear 0.6s ease-out;
+        }
+        
+        /* Mobile responsive - only applies to screens < 768px */
+        @media (max-width: 767px) {
+            .student-card {
+                width: 90%;
+                max-width: 340px;
+                height: auto;
+                aspect-ratio: 1.58 / 1;
+                transform: scale(1);
+                margin: 10px auto;
+            }
         }
         .student-card.downloading {
             transform: none !important;
