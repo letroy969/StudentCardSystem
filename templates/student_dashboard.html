@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>Student Dashboard - University of Mpumalanga</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -27,6 +29,7 @@
         .card-preview {
             width: 340px;
             height: 215px;
+            max-width: 100%;
             background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
             border-radius: 15px;
             padding: 20px;
@@ -34,6 +37,17 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mobile responsive card */
+        @media (max-width: 767px) {
+            .card-preview {
+                width: 100%;
+                height: auto;
+                min-height: 200px;
+                aspect-ratio: 1.58 / 1;
+                padding: 15px;
+            }
         }
         
         .card-preview::before {

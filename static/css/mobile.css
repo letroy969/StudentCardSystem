@@ -1,0 +1,340 @@
+/* Mobile Optimization Styles for Student Card System */
+
+/* Mobile Breakpoints */
+/* Mobile: < 768px */
+/* Tablet: 768px - 1024px */
+/* Desktop: > 1024px */
+
+/* ============================================
+   MOBILE NAVIGATION
+   ============================================ */
+
+/* Hamburger Menu Button */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 100;
+}
+
+.mobile-menu-btn span {
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Mobile Navigation Menu */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(26, 54, 93, 0.98);
+    z-index: 99;
+    padding-top: 80px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.mobile-nav.active {
+    transform: translateX(0);
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mobile-nav li {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-nav a {
+    display: block;
+    padding: 20px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.mobile-nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   RESPONSIVE CARD PREVIEW
+   ============================================ */
+
+.card-preview-mobile {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 200px;
+    aspect-ratio: 1.58 / 1; /* Maintain card proportions */
+}
+
+/* ============================================
+   DASHBOARD MOBILE LAYOUT
+   ============================================ */
+
+.dashboard-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.dashboard-mobile .card-section {
+    order: 1;
+}
+
+.dashboard-mobile .form-section {
+    order: 2;
+}
+
+/* ============================================
+   MOBILE FORM OPTIMIZATION
+   ============================================ */
+
+.mobile-form-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+}
+
+.mobile-input {
+    width: 100%;
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.mobile-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    min-height: 44px; /* Touch-friendly size */
+}
+
+/* ============================================
+   MOBILE RESPONSIVE UTILITIES
+   ============================================ */
+
+.mobile-hidden {
+    display: block;
+}
+
+.desktop-hidden {
+    display: none;
+}
+
+.mobile-text-center {
+    text-align: center;
+}
+
+.mobile-full-width {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.mobile-padding {
+    padding: 1rem;
+}
+
+.mobile-margin {
+    margin: 1rem 0;
+}
+
+/* ============================================
+   MEDIA QUERIES
+   ============================================ */
+
+@media (max-width: 767px) {
+    /* Mobile Navigation */
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    .desktop-nav {
+        display: none !important;
+    }
+    
+    .mobile-nav {
+        display: block;
+    }
+    
+    /* Mobile Hidden/Visible */
+    .mobile-hidden {
+        display: none !important;
+    }
+    
+    .desktop-hidden {
+        display: block !important;
+    }
+    
+    /* Card Preview Mobile */
+    .card-preview {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 200px;
+        aspect-ratio: 1.58 / 1;
+    }
+    
+    /* Dashboard Layout */
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .dashboard-mobile {
+        flex-direction: column;
+    }
+    
+    /* Forms */
+    .form-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0.5rem !important;
+        padding: 1rem !important;
+    }
+    
+    .content {
+        max-width: 100% !important;
+        margin: 0.5rem !important;
+        padding: 0.5rem !important;
+    }
+    
+    /* Navigation Bar */
+    nav {
+        padding: 0.75rem 1rem !important;
+    }
+    
+    nav h1 {
+        font-size: 16px !important;
+    }
+    
+    nav img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+    
+    /* Hero Section */
+    .hero-section h1 {
+        font-size: 24px !important;
+    }
+    
+    .hero-section p {
+        font-size: 14px !important;
+    }
+    
+    /* Grid Layouts */
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .md\\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .md\\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    /* Buttons */
+    button {
+        min-height: 44px;
+        font-size: 16px;
+    }
+    
+    /* Text Sizes */
+    .text-4xl {
+        font-size: 24px !important;
+    }
+    
+    .text-3xl {
+        font-size: 20px !important;
+    }
+    
+    .text-2xl {
+        font-size: 18px !important;
+    }
+    
+    .text-xl {
+        font-size: 16px !important;
+    }
+    
+    /* Spacing */
+    .py-20 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    .px-6 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Profile Cards */
+    .profile-container {
+        margin: 0.5rem !important;
+        padding: 1rem !important;
+    }
+    
+    /* Info Grids */
+    .info-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .card-preview {
+        width: 100% !important;
+        max-width: 400px !important;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .form-container {
+        max-width: 500px !important;
+    }
+}
+
+/* Desktop - Keep current layout */
+@media (min-width: 1025px) {
+    .mobile-nav {
+        display: none !important;
+    }
+    
+    .desktop-nav {
+        display: flex !important;
+    }
+}
+

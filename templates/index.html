@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
   <title>University of Mpumalanga - Online Student Card Creation</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
   <style>
     /* Base styles */
     .hero-bg {
@@ -86,15 +88,21 @@
        <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="UMP Logo" class="w-10 h-10 transform hover:scale-110 transition-transform duration-300 hover:rotate-3">
        <h1 class="text-xl font-bold hover:text-blue-300 transition-colors duration-300 transform hover:translate-x-1">University of Mpumalanga</h1>
      </div>
- 
-   
-     <ul class="flex space-x-6 items-center">
+
+     <!-- Mobile Menu Button -->
+     <button class="mobile-menu-btn desktop-hidden" id="mobileMenuBtn" aria-label="Toggle mobile menu">
+       <span></span>
+       <span></span>
+       <span></span>
+     </button>
+
+     <!-- Desktop Navigation -->
+     <ul class="desktop-nav flex space-x-6 items-center mobile-hidden">
        <li><a href="#" class="nav-link">Home</a></li>
        <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
        <li><a href="#faq" class="nav-link">FAQs</a></li>
        <li><a href="#contact-us" class="nav-link">Contact Us</a></li>
-        <li><a href="{{ url_for('reports') }}" class="nav-link">Activity</a></li>
-     
+       <li><a href="{{ url_for('reports') }}" class="nav-link">Activity</a></li>
        <li>
          <a href="{{ url_for('register') }}">
            <button class="bg-white text-blue-900 px-4 py-2 rounded-md font-semibold hover:bg-gray-200 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
@@ -105,6 +113,31 @@
        <li>
          <a href="{{ url_for('login') }}">
            <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+             <i class="fas fa-sign-in-alt mr-1"></i>Sign In
+           </button>
+         </a>
+       </li>
+     </ul>
+   </div>
+   
+   <!-- Mobile Navigation Menu -->
+   <div class="mobile-nav" id="mobileNav">
+     <ul>
+       <li><a href="#" onclick="closeMobileMenu()">Home</a></li>
+       <li><a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a></li>
+       <li><a href="#faq" onclick="closeMobileMenu()">FAQs</a></li>
+       <li><a href="#contact-us" onclick="closeMobileMenu()">Contact Us</a></li>
+       <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()">Activity</a></li>
+       <li>
+         <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
+           <button class="mobile-button bg-white text-blue-900 rounded-md font-semibold mt-2">
+             <i class="fas fa-user-plus mr-1"></i>Get Started
+           </button>
+         </a>
+       </li>
+       <li>
+         <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
+           <button class="mobile-button bg-blue-600 text-white rounded-md font-semibold mt-2">
              <i class="fas fa-sign-in-alt mr-1"></i>Sign In
            </button>
          </a>
@@ -305,5 +338,44 @@
    </footer>
 
 
+<script>
+// Mobile Menu Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    if (mobileMenuBtn && mobileNav) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenuBtn.classList.toggle('active');
+            mobileNav.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+        });
+    }
+});
+
+function closeMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    if (mobileMenuBtn && mobileNav) {
+        mobileMenuBtn.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileNav = document.getElementById('mobileNav');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (mobileNav && mobileMenuBtn && 
+        !mobileNav.contains(event.target) && 
+        !mobileMenuBtn.contains(event.target) &&
+        mobileNav.classList.contains('active')) {
+        closeMobileMenu();
+    }
+});
+</script>
 </body>
 </html>
