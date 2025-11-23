@@ -56,10 +56,10 @@ DATABASE_URL=<auto-set-when-database-linked>
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=umpdigitalcard@gmail.com
+MAIL_USERNAME=umpdigitalc@gmail.com
 MAIL_PASSWORD=<your-16-char-gmail-app-password>
-MAIL_DEFAULT_SENDER=umpdigitalcard@gmail.com
-SUPPORT_RECIPIENT=umpdigitalcard@gmail.com
+MAIL_DEFAULT_SENDER=umpdigitalc@gmail.com
+SUPPORT_RECIPIENT=umpdigitalc@gmail.com
 ```
 
 **Note**: `DATABASE_URL` is automatically set when you link the database!

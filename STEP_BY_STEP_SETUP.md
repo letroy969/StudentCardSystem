@@ -84,7 +84,7 @@ Complete walkthrough for deploying your Flask app to Render with PostgreSQL.
 ### Step 2.1: Enable 2-Factor Authentication
 
 1. Go to [Google Account Security](https://myaccount.google.com/security)
-2. Sign in with your Gmail account (`umpdigitalcard@gmail.com`)
+2. Sign in with your Gmail account (`umpdigitalc@gmail.com`)
 3. Under **"How you sign in to Google"**, find **"2-Step Verification"**
 4. Click **"2-Step Verification"**
 5. If not enabled:
@@ -205,7 +205,7 @@ Click **"Add Environment Variable"** for each of these:
 
 7. **MAIL_USERNAME**
    - Key: `MAIL_USERNAME`
-   - Value: `umpdigitalcard@gmail.com`
+   - Value: `umpdigitalc@gmail.com`
 
 8. **MAIL_PASSWORD**
    - Key: `MAIL_PASSWORD`
@@ -214,11 +214,11 @@ Click **"Add Environment Variable"** for each of these:
 
 9. **MAIL_DEFAULT_SENDER**
    - Key: `MAIL_DEFAULT_SENDER`
-   - Value: `umpdigitalcard@gmail.com`
+   - Value: `umpdigitalc@gmail.com`
 
 10. **SUPPORT_RECIPIENT**
     - Key: `SUPPORT_RECIPIENT`
-    - Value: `umpdigitalcard@gmail.com`
+    - Value: `umpdigitalc@gmail.com`
 
 **After adding all variables**, double-check:
 - ✅ All 10 variables are added (DATABASE_URL is auto-set)
