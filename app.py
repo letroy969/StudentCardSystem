@@ -1385,18 +1385,18 @@ def submit_ticket():
                         conn.commit()
                         cursor.close()
                         conn.close()
-                            
-                            # Send email notification
-                            try:
-                                email_sent = send_ticket_email(email, subject, message)
-                                if email_sent:
-                                    success = 'Your ticket has been submitted and we have been notified. We will get back to you soon.'
-                                else:
-                                    success = 'Your ticket has been submitted. We will get back to you soon. (Email notification failed)'
-                            except Exception as email_error:
-                                # Ticket saved but email failed
+                        
+                        # Send email notification
+                        try:
+                            email_sent = send_ticket_email(email, subject, message)
+                            if email_sent:
+                                success = 'Your ticket has been submitted and we have been notified. We will get back to you soon.'
+                            else:
                                 success = 'Your ticket has been submitted. We will get back to you soon. (Email notification failed)'
-                                print(f"Email send error: {email_error}")
+                        except Exception as email_error:
+                            # Ticket saved but email failed
+                            success = 'Your ticket has been submitted. We will get back to you soon. (Email notification failed)'
+                            print(f"Email send error: {email_error}")
                 except Psycopg2Error as db_error:
                     error = f'Database error: {str(db_error)}'
                     print(f"Database error in submit_ticket: {db_error}")
