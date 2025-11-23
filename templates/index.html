@@ -77,6 +77,56 @@
     .hover-scale:hover {
       transform: scale(1.05);
     }
+    
+    /* Mobile Homepage Optimizations */
+    @media (max-width: 767px) {
+      .hero-bg {
+        min-height: auto !important;
+      }
+      
+      .hero-section {
+        padding: 3rem 1rem 2rem !important;
+      }
+      
+      .hero-section h1 {
+        font-size: 24px !important;
+        line-height: 1.4;
+        margin-bottom: 1rem;
+      }
+      
+      .hero-section p {
+        font-size: 15px !important;
+        line-height: 1.6;
+      }
+      
+      #about, #how-it-works, #benefits, #faq, #contact-us {
+        padding: 2rem 1rem !important;
+      }
+      
+      #about > div:first-child {
+        padding: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+      
+      #about .grid, #how-it-works .grid, #benefits .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+      }
+      
+      #about .grid > div, #how-it-works .grid > div, #benefits .grid > div {
+        padding: 1.5rem !important;
+        margin: 0 !important;
+      }
+      
+      nav h1 {
+        font-size: 14px !important;
+      }
+      
+      nav img {
+        width: 32px !important;
+        height: 32px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -120,25 +170,25 @@
      </ul>
    </div>
    
-   <!-- Mobile Navigation Menu -->
+   <!-- Mobile Navigation Menu - Enhanced -->
    <div class="mobile-nav" id="mobileNav">
      <ul>
-       <li><a href="#" onclick="closeMobileMenu()">Home</a></li>
-       <li><a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a></li>
-       <li><a href="#faq" onclick="closeMobileMenu()">FAQs</a></li>
-       <li><a href="#contact-us" onclick="closeMobileMenu()">Contact Us</a></li>
-       <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()">Activity</a></li>
+       <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i>Home</a></li>
+       <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i>How It Works</a></li>
+       <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i>FAQs</a></li>
+       <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i>Contact Us</a></li>
+       <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i>Activity</a></li>
        <li>
          <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
-           <button class="mobile-button bg-white text-blue-900 rounded-md font-semibold mt-2">
-             <i class="fas fa-user-plus mr-1"></i>Get Started
+           <button class="mobile-button bg-white text-blue-900 w-full">
+             <i class="fas fa-user-plus"></i> Get Started
            </button>
          </a>
        </li>
        <li>
          <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
-           <button class="mobile-button bg-blue-600 text-white rounded-md font-semibold mt-2">
-             <i class="fas fa-sign-in-alt mr-1"></i>Sign In
+           <button class="mobile-button bg-blue-600 text-white w-full">
+             <i class="fas fa-sign-in-alt"></i> Sign In
            </button>
          </a>
        </li>
