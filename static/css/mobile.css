@@ -574,13 +574,16 @@
         gap: 1.5rem !important;
     }
     
-    /* Benefits section grid */
+    /* Benefits section grid - Desktop */
     #benefits .grid.md\\:grid-cols-2 {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 2rem !important;
     }
-    
+}
+
+/* Continue mobile styles */
+@media (max-width: 767px) {
     /* How It Works Section Mobile */
     #how-it-works {
         padding: 2rem 1rem !important;
