@@ -214,102 +214,6 @@
   </div>
 </header>
 
-<!-- Hover Gradient Navigation Bar -->
-<nav class="hover-gradient-nav" id="hoverGradientNav">
-  <ul class="nav-menu-list">
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)" data-icon-color="blue">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="#" class="nav-item-front">
-          <i class="fas fa-home"></i>
-          <span class="nav-label">Home</span>
-        </a>
-        <a href="#" class="nav-item-back">
-          <i class="fas fa-home"></i>
-          <span class="nav-label">Home</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)" data-icon-color="blue">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="#how-it-works" class="nav-item-front">
-          <i class="fas fa-cogs"></i>
-          <span class="nav-label">How It Works</span>
-        </a>
-        <a href="#how-it-works" class="nav-item-back">
-          <i class="fas fa-cogs"></i>
-          <span class="nav-label">How It Works</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)" data-icon-color="orange">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="#faq" class="nav-item-front">
-          <i class="fas fa-question-circle"></i>
-          <span class="nav-label">FAQs</span>
-        </a>
-        <a href="#faq" class="nav-item-back">
-          <i class="fas fa-question-circle"></i>
-          <span class="nav-label">FAQs</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(147,51,234,0.15) 0%, rgba(126,34,206,0.06) 50%, rgba(88,28,135,0) 100%)" data-icon-color="purple">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="#contact-us" class="nav-item-front">
-          <i class="fas fa-envelope"></i>
-          <span class="nav-label">Contact</span>
-        </a>
-        <a href="#contact-us" class="nav-item-back">
-          <i class="fas fa-envelope"></i>
-          <span class="nav-label">Contact</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.06) 50%, rgba(21,128,61,0) 100%)" data-icon-color="green">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="{{ url_for('reports') }}" class="nav-item-front">
-          <i class="fas fa-chart-line"></i>
-          <span class="nav-label">Activity</span>
-        </a>
-        <a href="{{ url_for('reports') }}" class="nav-item-back">
-          <i class="fas fa-chart-line"></i>
-          <span class="nav-label">Activity</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)" data-icon-color="blue">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="{{ url_for('register') }}" class="nav-item-front">
-          <i class="fas fa-user-plus"></i>
-          <span class="nav-label">Get Started</span>
-        </a>
-        <a href="{{ url_for('register') }}" class="nav-item-back">
-          <i class="fas fa-user-plus"></i>
-          <span class="nav-label">Get Started</span>
-        </a>
-      </div>
-    </li>
-    <li class="nav-menu-item" data-gradient="radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.06) 50%, rgba(185,28,28,0) 100%)" data-icon-color="red">
-      <div class="nav-item-wrapper">
-        <div class="nav-item-glow"></div>
-        <a href="{{ url_for('login') }}" class="nav-item-front">
-          <i class="fas fa-sign-in-alt"></i>
-          <span class="nav-label">Sign In</span>
-        </a>
-        <a href="{{ url_for('login') }}" class="nav-item-back">
-          <i class="fas fa-sign-in-alt"></i>
-          <span class="nav-label">Sign In</span>
-        </a>
-      </div>
-    </li>
-  </ul>
-</nav>
 
 
  
@@ -563,22 +467,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // How It Works Carousel
     initHowItWorksCarousel();
 });
-
-// Initialize Hover Gradient Navigation
-function initHoverGradientNav() {
-    const navItems = document.querySelectorAll('.nav-menu-item');
-    
-    navItems.forEach(item => {
-        const gradient = item.getAttribute('data-gradient');
-        const glow = item.querySelector('.nav-item-glow');
-        
-        if (glow && gradient) {
-            // Set CSS custom property for gradient
-            item.style.setProperty('--item-gradient', gradient);
-            glow.style.background = gradient;
-        }
-    });
-}
 
 function closeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
