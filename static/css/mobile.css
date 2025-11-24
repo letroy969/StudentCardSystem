@@ -645,7 +645,7 @@
 
 /* Desktop: Preserve original horizontal grid layout */
 @media only screen and (min-width: 768px) {
-    /* Restore grid layout for desktop - About section */
+    /* Restore grid layout for desktop - About section (Mission, Values, What We Offer) */
     #about .grid.md\\:grid-cols-3,
     #about .grid {
         display: grid !important;
@@ -657,6 +657,7 @@
         width: auto !important;
         padding: 1.5rem !important;
         margin: 0 !important;
+        display: block !important;
     }
     
     /* Ensure How It Works grid is preserved */
@@ -672,6 +673,11 @@
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 2rem !important;
+    }
+    
+    /* Override any mobile flex styles on desktop */
+    #about .grid {
+        flex-direction: row !important;
     }
 }
 
