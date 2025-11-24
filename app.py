@@ -1022,6 +1022,8 @@ def dashboard():
                 student_campus = card_data['campus']
             else:
                 card_data['campus'] = student_campus
+            # Debug: Print photo_path to verify it's being retrieved
+            print(f"DEBUG - Dashboard: Retrieved photo_path: {card_data.get('photo_path')}")
     except Exception as e:
         print(f"Error loading card data: {e}")
     finally:
@@ -1056,6 +1058,8 @@ def student_card_preview():
                 student_campus = card_data['campus']
             else:
                 card_data['campus'] = student_campus
+            # Debug: Print photo_path to verify it's being retrieved
+            print(f"DEBUG - Preview: Retrieved photo_path: {card_data.get('photo_path')}")
     except Exception as e:
         print(f"Error loading card data: {e}")
     finally:
@@ -1234,12 +1238,20 @@ def update_card():
         
         if existing_card:
             # Update existing card
+            # First, get the existing photo_path to preserve it if no new photo is uploaded
+            cursor.execute('SELECT photo_path FROM student_cards WHERE email = %s', (session['user'],))
+            existing_photo = cursor.fetchone()
+            existing_photo_path = existing_photo.get('photo_path') if existing_photo else None
+            
+            # Use new photo_path if provided, otherwise keep existing one
+            final_photo_path = photo_path if photo_path else existing_photo_path
+            
             update_query = 'UPDATE student_cards SET title = %s, name = %s, surname = %s, qualification = %s, student_number = %s, campus = %s, last_updated = NOW()'
             params = [title, name, surname, qualification, student_number, campus]
             
-            if photo_path:
+            if final_photo_path:
                 update_query += ', photo_path = %s'
-                params.append(photo_path)
+                params.append(final_photo_path)
             
             if proof_path:
                 update_query += ', proof_of_registration_path = %s'
@@ -1249,6 +1261,10 @@ def update_card():
             params.append(session['user'])
             
             cursor.execute(update_query, tuple(params))
+            print(f"DEBUG - Update card: photo_path = {final_photo_path}, email = {session['user']}")
+            # Debug: Verify photo_path was saved
+            if photo_path:
+                print(f"DEBUG - Update: Saving photo_path: {photo_path} for email: {session['user']}")
         else:
             # Insert new card
             cursor.execute('''
@@ -1256,8 +1272,25 @@ def update_card():
                 (email, title, name, surname, qualification, student_number, campus, photo_path, proof_of_registration_path)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             ''', (session['user'], title, name, surname, qualification, student_number, campus, photo_path, proof_path))
+            # Debug: Verify photo_path was saved
+            if photo_path:
+                print(f"DEBUG - Insert: Saving photo_path: {photo_path} for email: {session['user']}")
         
         conn.commit()
+        
+        # Verify the photo_path was saved correctly
+        cursor.execute('SELECT photo_path FROM student_cards WHERE email = %s', (session['user'],))
+        saved_photo = cursor.fetchone()
+        if saved_photo:
+            print(f"DEBUG - After save: Verified photo_path in DB: {saved_photo.get('photo_path')}")
+            # Also verify the file exists
+            if saved_photo.get('photo_path'):
+                file_path = os.path.join('static', saved_photo.get('photo_path'))
+                if os.path.exists(file_path):
+                    print(f"DEBUG - Photo file exists at: {file_path}")
+                else:
+                    print(f"DEBUG - WARNING: Photo file NOT found at: {file_path}")
+        
         flash('Card updated successfully!')
         
     except Exception as e:
