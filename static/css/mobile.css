@@ -362,6 +362,14 @@
         display: block;
     }
     
+    /* Hide hover gradient nav on mobile when menu is open */
+    .mobile-nav-container.active ~ .hover-gradient-nav {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+}
+    
     /* Mobile Hidden/Visible */
     .mobile-hidden {
         display: none !important;
