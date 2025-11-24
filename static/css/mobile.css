@@ -550,40 +550,6 @@
     }
 }
 
-/* Desktop: Preserve original horizontal grid layout */
-@media only screen and (min-width: 768px) {
-    /* Restore grid layout for desktop */
-    #about .grid.md\\:grid-cols-3,
-    #about .grid {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 1.5rem !important;
-    }
-    
-    #about .grid > div {
-        width: auto !important;
-        padding: 1.5rem !important;
-        margin: 0 !important;
-    }
-    
-    /* Ensure How It Works grid is preserved */
-    #how-it-works .grid.md\\:grid-cols-3,
-    #how-it-works .desktop-how-it-works {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 1.5rem !important;
-    }
-    
-    /* Benefits section grid - Desktop */
-    #benefits .grid.md\\:grid-cols-2 {
-        display: grid !important;
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 2rem !important;
-    }
-}
-
-/* Continue mobile styles */
-@media (max-width: 767px) {
     /* How It Works Section Mobile */
     #how-it-works {
         padding: 2rem 1rem !important;
@@ -642,6 +608,38 @@
     /* Better spacing */
     section {
         margin-bottom: 2rem;
+    }
+}
+
+/* Desktop: Preserve original horizontal grid layout */
+@media only screen and (min-width: 768px) {
+    /* Restore grid layout for desktop - About section */
+    #about .grid.md\\:grid-cols-3,
+    #about .grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+    
+    #about .grid > div {
+        width: auto !important;
+        padding: 1.5rem !important;
+        margin: 0 !important;
+    }
+    
+    /* Ensure How It Works grid is preserved */
+    #how-it-works .grid.md\\:grid-cols-3,
+    #how-it-works .desktop-how-it-works {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+    
+    /* Benefits section grid - Desktop */
+    #benefits .grid.md\\:grid-cols-2 {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 2rem !important;
     }
 }
 
