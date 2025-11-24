@@ -797,3 +797,146 @@
     }
 }
 
+/* ============================================
+   LOGIN & REGISTER PAGES MOBILE OPTIMIZATION
+   ============================================ */
+
+@media (max-width: 767px) {
+    /* Form Container - Better sizing and centering */
+    .content {
+        max-width: 95% !important;
+        margin: 1rem auto !important;
+        padding: 0 0.5rem !important;
+    }
+    
+    .form-container {
+        padding: 2rem 1.5rem !important;
+        margin: 0 auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Increase text sizes for mobile */
+    .form-container h2 {
+        font-size: 1.75rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Labels - Larger on mobile */
+    label {
+        font-size: 1rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Input fields - Larger text and padding */
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    select {
+        font-size: 1rem !important;
+        padding: 0.875rem 1rem !important;
+        height: auto !important;
+        min-height: 48px !important;
+    }
+    
+    /* Placeholder text */
+    input::placeholder,
+    select::placeholder {
+        font-size: 0.95rem !important;
+    }
+    
+    /* Error messages - Larger */
+    .error-message,
+    .success-message,
+    .password-match-error {
+        font-size: 0.95rem !important;
+        padding: 1rem !important;
+        line-height: 1.5 !important;
+    }
+    
+    /* Links - Larger and more touch-friendly */
+    a {
+        font-size: 0.95rem !important;
+        padding: 0.5rem 0 !important;
+    }
+    
+    /* Buttons - Larger and more touch-friendly */
+    button[type="submit"],
+    .btn-primary {
+        font-size: 1.1rem !important;
+        padding: 1rem 1.5rem !important;
+        min-height: 52px !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Form spacing */
+    .space-y-4 > * + * {
+        margin-top: 1.25rem !important;
+    }
+    
+    .space-y-6 > * + * {
+        margin-top: 1.5rem !important;
+    }
+    
+    /* Account type select */
+    select#account_type {
+        font-size: 1rem !important;
+        padding: 0.875rem 1rem !important;
+    }
+    
+    /* Security question labels */
+    .text-xs {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Logo size */
+    .form-container img {
+        height: 3.5rem !important;
+        width: auto !important;
+    }
+    
+    /* Icon sizes */
+    .text-4xl {
+        font-size: 2.5rem !important;
+    }
+    
+    /* Flash messages */
+    .flash-message,
+    .mb-3.p-2.rounded-md {
+        font-size: 0.95rem !important;
+        padding: 1rem !important;
+        line-height: 1.6 !important;
+    }
+    
+    /* Related content at bottom */
+    .related-content {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin-top: 2rem !important;
+        padding: 1rem !important;
+    }
+    
+    .related-content h3 {
+        font-size: 1.25rem !important;
+    }
+    
+    .related-content p {
+        font-size: 0.95rem !important;
+    }
+    
+    /* Password toggle icons */
+    .eye-open,
+    .eye-closed {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+    }
+    
+    /* Form background container */
+    .rounded-md.shadow-sm {
+        padding: 1.25rem !important;
+    }
+}
+
