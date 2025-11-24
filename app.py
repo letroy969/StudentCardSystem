@@ -1060,6 +1060,9 @@ def student_card_preview():
         # Use LOWER() for case-insensitive email matching
         cursor.execute('SELECT * FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         card_data = cursor.fetchone()
+        card_valid = False
+        validation_message = None
+        
         if card_data is not None:
             if not card_data.get('student_number'):
                 card_data['student_number'] = student_number
@@ -1076,15 +1079,37 @@ def student_card_preview():
                     print(f"DEBUG - Preview: Photo file EXISTS at: {photo_file_path}")
                 else:
                     print(f"DEBUG - Preview: WARNING - Photo file NOT FOUND at: {photo_file_path}")
+            
+            # Check if card is valid (both photo and proof of registration must exist)
+            has_photo = card_data.get('photo_path') and os.path.exists(os.path.join('static', card_data.get('photo_path')))
+            has_proof = card_data.get('proof_of_registration_path') and os.path.exists(os.path.join('static', card_data.get('proof_of_registration_path')))
+            
+            if not has_photo and not has_proof:
+                card_valid = False
+                validation_message = "Card Not Yet Created"
+            elif not has_photo:
+                card_valid = False
+                validation_message = "Photo Not Uploaded - Card Not Valid"
+            elif not has_proof:
+                card_valid = False
+                validation_message = "Proof of Registration Not Verified - Card Not Valid"
+            else:
+                card_valid = True
+        else:
+            # No card data found
+            card_valid = False
+            validation_message = "Card Not Yet Created"
     except Exception as e:
         print(f"Error loading card data: {e}")
+        card_valid = False
+        validation_message = "Error Loading Card Data"
     finally:
         if 'cursor' in locals():
             cursor.close()
         if 'conn' in locals() and conn is not None:
             conn.close()
     
-    return render_template('student_card_preview.html', card_data=card_data, student_number=student_number, student_campus=student_campus)
+    return render_template('student_card_preview.html', card_data=card_data, student_number=student_number, student_campus=student_campus, card_valid=card_valid, validation_message=validation_message)
 
 @app.route('/update-card', methods=['POST'])
 def update_card():
@@ -1558,26 +1583,51 @@ def lecture_card_preview():
         return redirect(url_for('login'))
     card_data = None
     staff_campus = 'Mbombela Campus'
+    card_valid = False
+    validation_message = None
     try:
         conn = get_db_connection()
         if not conn:
             flash('Database connection failed!', 'error')
             return redirect(url_for('lecture_dashboard'))
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM lecture_cards WHERE email = %s', (session['user'],))
+        cursor.execute('SELECT * FROM lecture_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         card_data = cursor.fetchone()
         if card_data and card_data.get('campus'):
             staff_campus = card_data['campus']
         elif card_data:
             card_data['campus'] = staff_campus
+        
+        # Check if card is valid (both photo and proof of employment must exist)
+        if card_data:
+            has_photo = card_data.get('photo_path') and os.path.exists(os.path.join('static', card_data.get('photo_path')))
+            has_proof = card_data.get('proof_of_employment_path') and os.path.exists(os.path.join('static', card_data.get('proof_of_employment_path')))
+            
+            if not has_photo and not has_proof:
+                card_valid = False
+                validation_message = "Card Not Yet Created"
+            elif not has_photo:
+                card_valid = False
+                validation_message = "Photo Not Uploaded - Card Not Valid"
+            elif not has_proof:
+                card_valid = False
+                validation_message = "Proof of Employment Not Verified - Card Not Valid"
+            else:
+                card_valid = True
+        else:
+            # No card data found
+            card_valid = False
+            validation_message = "Card Not Yet Created"
     except Exception as e:
         print(f"Error loading lecture card data: {e}")
+        card_valid = False
+        validation_message = "Error Loading Card Data"
     finally:
         if 'cursor' in locals():
             cursor.close()
         if 'conn' in locals() and conn is not None:
             conn.close()
-    return render_template('lecture_card_preview.html', card_data=card_data, staff_campus=staff_campus)
+    return render_template('lecture_card_preview.html', card_data=card_data, staff_campus=staff_campus, card_valid=card_valid, validation_message=validation_message)
 
 
 @app.route('/qr-image/<path:email>', endpoint='qr_image')

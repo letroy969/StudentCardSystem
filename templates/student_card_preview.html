@@ -236,6 +236,38 @@
             justify-content: center;
         }
 
+        .card-validation-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .validation-icon {
+            font-size: 48px;
+            color: #e53e3e;
+            margin-bottom: 10px;
+        }
+
+        .validation-message {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e53e3e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
         .qr-code {
             position: absolute;
             top: 52%;
@@ -317,6 +349,12 @@
     
     <div class="student-card" id="studentCardPreview">
         <div class="card-overlay">
+            {% if not card_valid %}
+            <div class="card-validation-overlay">
+                <div class="validation-icon">⚠️</div>
+                <div class="validation-message">{{ validation_message }}</div>
+            </div>
+            {% endif %}
             <span class="year-text">2025</span>
             <div class="photo-container">
                 {% if card_data and card_data.photo_path %}
