@@ -368,6 +368,28 @@
         pointer-events: none;
         transition: opacity 0.3s ease;
     }
+    
+    /* Hide desktop-only elements on mobile */
+    .desktop-only {
+        display: none !important;
+    }
+    
+    /* Show mobile-only elements */
+    .mobile-only {
+        display: block !important;
+    }
+}
+
+@media (min-width: 768px) {
+    /* Hide mobile-only elements on desktop */
+    .mobile-only {
+        display: none !important;
+    }
+    
+    /* Show desktop-only elements */
+    .desktop-only {
+        display: block !important;
+    }
 }
     
     /* Mobile Hidden/Visible */
