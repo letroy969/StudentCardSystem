@@ -799,118 +799,119 @@
 
 /* ============================================
    LOGIN & REGISTER PAGES MOBILE OPTIMIZATION
+   Mobile Only - Desktop layout unchanged
    ============================================ */
 
-@media (max-width: 767px) {
-    /* Form Container - Better sizing and centering */
-    .content {
+@media only screen and (max-width: 767px) {
+    /* Form Container - Better sizing and centering - MOBILE ONLY */
+    .bg-image .content {
         max-width: 95% !important;
         margin: 1rem auto !important;
         padding: 0 0.5rem !important;
     }
     
-    .form-container {
+    .bg-image .form-container {
         padding: 2rem 1.5rem !important;
         margin: 0 auto !important;
         width: 100% !important;
         max-width: 100% !important;
     }
     
-    /* Increase text sizes for mobile */
-    .form-container h2 {
+    /* Increase text sizes for mobile ONLY */
+    .bg-image .form-container h2 {
         font-size: 1.75rem !important;
         line-height: 1.3 !important;
     }
     
-    /* Labels - Larger on mobile */
-    label {
+    /* Labels - Larger on mobile ONLY */
+    .bg-image label {
         font-size: 1rem !important;
         font-weight: 600 !important;
         margin-bottom: 0.5rem !important;
     }
     
-    /* Input fields - Larger text and padding */
-    input[type="email"],
-    input[type="password"],
-    input[type="text"],
-    select {
+    /* Input fields - Larger text and padding - MOBILE ONLY */
+    .bg-image input[type="email"],
+    .bg-image input[type="password"],
+    .bg-image input[type="text"],
+    .bg-image select {
         font-size: 1rem !important;
         padding: 0.875rem 1rem !important;
         height: auto !important;
         min-height: 48px !important;
     }
     
-    /* Placeholder text */
-    input::placeholder,
-    select::placeholder {
+    /* Placeholder text - MOBILE ONLY */
+    .bg-image input::placeholder,
+    .bg-image select::placeholder {
         font-size: 0.95rem !important;
     }
     
-    /* Error messages - Larger */
-    .error-message,
-    .success-message,
-    .password-match-error {
+    /* Error messages - Larger - MOBILE ONLY */
+    .bg-image .error-message,
+    .bg-image .success-message,
+    .bg-image .password-match-error {
         font-size: 0.95rem !important;
         padding: 1rem !important;
         line-height: 1.5 !important;
     }
     
-    /* Links - Larger and more touch-friendly */
-    a {
+    /* Links - Larger and more touch-friendly - MOBILE ONLY */
+    .bg-image a {
         font-size: 0.95rem !important;
         padding: 0.5rem 0 !important;
     }
     
-    /* Buttons - Larger and more touch-friendly */
-    button[type="submit"],
-    .btn-primary {
+    /* Buttons - Larger and more touch-friendly - MOBILE ONLY */
+    .bg-image button[type="submit"],
+    .bg-image .btn-primary {
         font-size: 1.1rem !important;
         padding: 1rem 1.5rem !important;
         min-height: 52px !important;
         font-weight: 600 !important;
     }
     
-    /* Form spacing */
-    .space-y-4 > * + * {
+    /* Form spacing - MOBILE ONLY */
+    .bg-image .space-y-4 > * + * {
         margin-top: 1.25rem !important;
     }
     
-    .space-y-6 > * + * {
+    .bg-image .space-y-6 > * + * {
         margin-top: 1.5rem !important;
     }
     
-    /* Account type select */
-    select#account_type {
+    /* Account type select - MOBILE ONLY */
+    .bg-image select#account_type {
         font-size: 1rem !important;
         padding: 0.875rem 1rem !important;
     }
     
-    /* Security question labels */
-    .text-xs {
+    /* Security question labels - MOBILE ONLY */
+    .bg-image .text-xs {
         font-size: 0.9rem !important;
     }
     
-    /* Logo size */
-    .form-container img {
+    /* Logo size - MOBILE ONLY */
+    .bg-image .form-container img {
         height: 3.5rem !important;
         width: auto !important;
     }
     
-    /* Icon sizes */
-    .text-4xl {
+    /* Icon sizes - MOBILE ONLY */
+    .bg-image .text-4xl {
         font-size: 2.5rem !important;
     }
     
-    /* Flash messages */
-    .flash-message,
-    .mb-3.p-2.rounded-md {
+    /* Flash messages - MOBILE ONLY */
+    .bg-image .flash-message,
+    .bg-image .mb-3.p-2.rounded-md {
         font-size: 0.95rem !important;
         padding: 1rem !important;
         line-height: 1.6 !important;
     }
     
-    /* Related content at bottom */
-    .related-content {
+    /* Related content at bottom - MOBILE ONLY */
+    .bg-image .related-content {
         position: relative !important;
         bottom: auto !important;
         left: auto !important;
@@ -919,24 +920,56 @@
         padding: 1rem !important;
     }
     
-    .related-content h3 {
+    .bg-image .related-content h3 {
         font-size: 1.25rem !important;
     }
     
-    .related-content p {
+    .bg-image .related-content p {
         font-size: 0.95rem !important;
     }
     
-    /* Password toggle icons */
-    .eye-open,
-    .eye-closed {
+    /* Password toggle icons - MOBILE ONLY */
+    .bg-image .eye-open,
+    .bg-image .eye-closed {
         width: 1.5rem !important;
         height: 1.5rem !important;
     }
     
-    /* Form background container */
-    .rounded-md.shadow-sm {
+    /* Form background container - MOBILE ONLY */
+    .bg-image .rounded-md.shadow-sm {
         padding: 1.25rem !important;
+    }
+}
+
+/* Desktop - Ensure original styles are preserved */
+@media only screen and (min-width: 768px) {
+    /* Reset any mobile overrides for desktop */
+    .bg-image .content {
+        max-width: 400px;
+        margin: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .bg-image .form-container {
+        padding: 1.5rem;
+    }
+    
+    .bg-image input[type="email"],
+    .bg-image input[type="password"],
+    .bg-image input[type="text"],
+    .bg-image select {
+        font-size: 0.75rem; /* text-xs */
+        padding: 0.5rem 0.75rem; /* py-2 px-3 */
+    }
+    
+    .bg-image label {
+        font-size: 0.875rem; /* text-sm */
+    }
+    
+    .bg-image button[type="submit"],
+    .bg-image .btn-primary {
+        font-size: 0.875rem; /* text-sm */
+        padding: 0.5rem 1rem; /* py-2 px-4 */
     }
 }
 
