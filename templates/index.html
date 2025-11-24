@@ -248,9 +248,11 @@
       </section>
 
       
-      <section id="how-it-works" class="py-12 px-4 max-w-5xl mx-auto text-center text-white">
-        <h2 class="text-2xl font-bold mb-8">How It Works</h2>
-        <div class="grid md:grid-cols-3 gap-6">
+      <section id="how-it-works" class="py-12 px-4 max-w-5xl mx-auto text-white">
+        <h2 class="text-2xl font-bold mb-8 text-center">How It Works</h2>
+        
+        <!-- Desktop Layout (unchanged) -->
+        <div class="desktop-how-it-works grid md:grid-cols-3 gap-6 mobile-hidden">
           <div class="bg-white bg-opacity-90 p-6 rounded-xl shadow text-black">
             <i class="fas fa-pen text-blue-600 text-3xl mb-4"></i>
             <h3 class="font-bold">Register</h3>
@@ -265,6 +267,38 @@
             <i class="fas fa-check-circle text-blue-600 text-3xl mb-4"></i>
             <h3 class="font-bold">Get Approved</h3>
             <p>Your application will be verified and approved online.</p>
+          </div>
+        </div>
+        
+        <!-- Mobile Carousel Layout -->
+        <div class="mobile-how-it-works desktop-hidden">
+          <div class="feature-carousel-container">
+            <div class="feature-card-mobile">
+              <div class="feature-card-content">
+                <div class="step-indicator" id="stepIndicator">Step 1</div>
+                <h2 class="step-title" id="stepTitle">Register</h2>
+                <p class="step-description" id="stepDescription">Create an account and provide your student details.</p>
+                <div class="step-icon-container">
+                  <div class="step-icon" id="stepIcon">
+                    <i class="fas fa-pen"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="steps-nav-mobile">
+              <button class="step-btn active" data-step="0" aria-label="Step 1">
+                <span class="step-number">1</span>
+                <span class="step-name">Register</span>
+              </button>
+              <button class="step-btn" data-step="1" aria-label="Step 2">
+                <span class="step-number">2</span>
+                <span class="step-name">Create</span>
+              </button>
+              <button class="step-btn" data-step="2" aria-label="Step 3">
+                <span class="step-number">3</span>
+                <span class="step-name">Approve</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -401,6 +435,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
         });
     }
+    
+    // How It Works Carousel
+    initHowItWorksCarousel();
 });
 
 function closeMobileMenu() {
@@ -426,6 +463,127 @@ document.addEventListener('click', function(event) {
         closeMobileMenu();
     }
 });
+
+// How It Works Carousel
+const steps = [
+    {
+        name: "Step 1",
+        title: "Register",
+        description: "Create an account and provide your student details.",
+        icon: "fas fa-pen"
+    },
+    {
+        name: "Step 2",
+        title: "Create Your Card",
+        description: "Upload your photo and confirm your information.",
+        icon: "fas fa-id-card"
+    },
+    {
+        name: "Step 3",
+        title: "Get Approved",
+        description: "Your application will be verified and approved online.",
+        icon: "fas fa-check-circle"
+    }
+];
+
+let currentStep = 0;
+let carouselInterval = null;
+
+function initHowItWorksCarousel() {
+    const stepButtons = document.querySelectorAll('.step-btn');
+    const stepIndicator = document.getElementById('stepIndicator');
+    const stepTitle = document.getElementById('stepTitle');
+    const stepDescription = document.getElementById('stepDescription');
+    const stepIcon = document.getElementById('stepIcon');
+    
+    if (!stepButtons.length) return;
+    
+    // Update step content
+    function updateStep(stepIndex) {
+        const step = steps[stepIndex];
+        if (!step) return;
+        
+        // Animate out
+        if (stepTitle) {
+            stepTitle.style.opacity = '0';
+            stepTitle.style.transform = 'translateY(20px)';
+        }
+        if (stepDescription) {
+            stepDescription.style.opacity = '0';
+            stepDescription.style.transform = 'translateY(20px)';
+        }
+        if (stepIcon) {
+            stepIcon.style.opacity = '0';
+            stepIcon.style.transform = 'scale(0.8)';
+        }
+        
+        setTimeout(() => {
+            if (stepIndicator) stepIndicator.textContent = step.name;
+            if (stepTitle) stepTitle.textContent = step.title;
+            if (stepDescription) stepDescription.textContent = step.description;
+            if (stepIcon) stepIcon.innerHTML = `<i class="${step.icon}"></i>`;
+            
+            // Animate in
+            if (stepTitle) {
+                stepTitle.style.opacity = '1';
+                stepTitle.style.transform = 'translateY(0)';
+            }
+            if (stepDescription) {
+                stepDescription.style.opacity = '1';
+                stepDescription.style.transform = 'translateY(0)';
+            }
+            if (stepIcon) {
+                stepIcon.style.opacity = '1';
+                stepIcon.style.transform = 'scale(1)';
+            }
+        }, 200);
+        
+        // Update buttons
+        stepButtons.forEach((btn, idx) => {
+            if (idx === stepIndex) {
+                btn.classList.add('active');
+            } else if (idx < stepIndex) {
+                btn.classList.add('completed');
+                btn.classList.remove('active');
+            } else {
+                btn.classList.remove('active', 'completed');
+            }
+        });
+    }
+    
+    // Button click handlers
+    stepButtons.forEach((btn, idx) => {
+        btn.addEventListener('click', () => {
+            currentStep = idx;
+            updateStep(currentStep);
+            resetCarousel();
+        });
+    });
+    
+    // Auto-cycle
+    function nextStep() {
+        currentStep = (currentStep + 1) % steps.length;
+        updateStep(currentStep);
+    }
+    
+    function resetCarousel() {
+        if (carouselInterval) clearInterval(carouselInterval);
+        carouselInterval = setInterval(nextStep, 5000);
+    }
+    
+    // Initialize
+    updateStep(0);
+    resetCarousel();
+    
+    // Pause on hover
+    const carouselContainer = document.querySelector('.feature-carousel-container');
+    if (carouselContainer) {
+        carouselContainer.addEventListener('mouseenter', () => {
+            if (carouselInterval) clearInterval(carouselInterval);
+        });
+        carouselContainer.addEventListener('mouseleave', resetCarousel);
+    }
+}
 </script>
 </body>
 </html>

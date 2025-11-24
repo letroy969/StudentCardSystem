@@ -514,6 +514,166 @@
     }
 }
 
+/* ============================================
+   HOW IT WORKS MOBILE CAROUSEL
+   ============================================ */
+
+.feature-carousel-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.feature-card-mobile {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    min-height: 400px;
+    position: relative;
+}
+
+.feature-card-content {
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-height: 400px;
+    justify-content: center;
+}
+
+.step-indicator {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #0284c7;
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #4a5568;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+}
+
+.step-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(2, 132, 199, 0.3);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-icon i {
+    font-size: 48px;
+    color: white;
+}
+
+.steps-nav-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0 1rem;
+}
+
+.step-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.step-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.step-btn.active {
+    background: #0284c7;
+    color: white;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+    transform: scale(1.05);
+}
+
+.step-btn.completed {
+    background: #0284c7;
+    color: white;
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step-btn.active .step-number,
+.step-btn.completed .step-number {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.step-name {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .step-name {
+        display: inline-block;
+    }
+}
+
 /* Desktop - Keep current layout */
 @media (min-width: 1025px) {
     .mobile-nav {
@@ -522,6 +682,24 @@
     
     .desktop-nav {
         display: flex !important;
+    }
+    
+    .mobile-how-it-works {
+        display: none !important;
+    }
+    
+    .desktop-how-it-works {
+        display: grid !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .desktop-how-it-works {
+        display: none !important;
+    }
+    
+    .mobile-how-it-works {
+        display: block !important;
     }
 }
 
