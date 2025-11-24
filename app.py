@@ -1274,7 +1274,7 @@ def update_card():
                 update_query += ', proof_of_registration_path = %s'
                 params.append(proof_path)
             
-            update_query += ' WHERE email = %s'
+            update_query += ' WHERE LOWER(email) = LOWER(%s)'
             params.append(session['user'])
             
             cursor.execute(update_query, tuple(params))
