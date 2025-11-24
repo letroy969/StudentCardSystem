@@ -536,6 +536,7 @@
         margin-bottom: 2rem !important;
     }
     
+    /* Mobile: Force single column */
     #about .grid {
         display: flex !important;
         flex-direction: column !important;
@@ -547,12 +548,45 @@
         padding: 1.5rem !important;
         margin: 0 !important;
     }
+}
+
+/* Desktop: Preserve original horizontal grid layout */
+@media only screen and (min-width: 768px) {
+    /* Restore grid layout for desktop */
+    #about .grid.md\\:grid-cols-3,
+    #about .grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+    
+    #about .grid > div {
+        width: auto !important;
+        padding: 1.5rem !important;
+        margin: 0 !important;
+    }
+    
+    /* Ensure How It Works grid is preserved */
+    #how-it-works .grid.md\\:grid-cols-3,
+    #how-it-works .desktop-how-it-works {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 1.5rem !important;
+    }
+    
+    /* Benefits section grid */
+    #benefits .grid.md\\:grid-cols-2 {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 2rem !important;
+    }
     
     /* How It Works Section Mobile */
     #how-it-works {
         padding: 2rem 1rem !important;
     }
     
+    /* Mobile: Force single column for How It Works */
     #how-it-works .grid {
         display: flex !important;
         flex-direction: column !important;
