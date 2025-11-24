@@ -171,9 +171,11 @@
 
      <!-- Mobile Menu Button -->
      <button class="mobile-menu-btn desktop-hidden" id="mobileMenuBtn" aria-label="Toggle mobile menu">
-       <span></span>
-       <span></span>
-       <span></span>
+       <svg width="23" height="23" viewBox="0 0 23 23">
+         <path class="line-top" d="M 2 2.5 L 20 2.5" />
+         <path class="line-middle" d="M 2 9.423 L 20 9.423" />
+         <path class="line-bottom" d="M 2 16.346 L 20 16.346" />
+       </svg>
      </button>
 
      <!-- Desktop Navigation -->
@@ -206,35 +208,38 @@
      </ul>
    </div>
    
-   <!-- Mobile Navigation Menu - Enhanced -->
-   <div class="mobile-nav" id="mobileNav">
-     <ul>
-       <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i>Home</a></li>
-       <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i>How It Works</a></li>
-       <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i>FAQs</a></li>
-       <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i>Contact Us</a></li>
-       <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i>Activity</a></li>
-       <li>
-         <div class="button-glow-wrapper">
-           <div class="button-glow" data-glow="mobile-glow1"></div>
-           <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
-             <button class="relative mobile-button bg-white text-blue-900 w-full">
-               <i class="fas fa-user-plus"></i> Get Started
-             </button>
-           </a>
-         </div>
-       </li>
-       <li>
-         <div class="button-glow-wrapper">
-           <div class="button-glow" data-glow="mobile-glow2"></div>
-           <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
-             <button class="relative mobile-button bg-blue-600 text-white w-full">
-               <i class="fas fa-sign-in-alt"></i> Sign In
-             </button>
-           </a>
-         </div>
-       </li>
-     </ul>
+   <!-- Mobile Navigation Menu - Circular Animation -->
+   <div class="mobile-nav-container" id="mobileNavContainer">
+     <div class="mobile-nav-background"></div>
+     <nav class="mobile-nav">
+       <ul>
+         <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i><span>Home</span></a></li>
+         <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i><span>How It Works</span></a></li>
+         <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i><span>FAQs</span></a></li>
+         <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i><span>Contact Us</span></a></li>
+         <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i><span>Activity</span></a></li>
+         <li>
+           <div class="button-glow-wrapper w-full">
+             <div class="button-glow"></div>
+             <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
+               <button class="relative mobile-button bg-white text-blue-900 w-full">
+                 <i class="fas fa-user-plus"></i> Get Started
+               </button>
+             </a>
+           </div>
+         </li>
+         <li>
+           <div class="button-glow-wrapper w-full">
+             <div class="button-glow"></div>
+             <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
+               <button class="relative mobile-button bg-blue-600 text-white w-full">
+                 <i class="fas fa-sign-in-alt"></i> Sign In
+               </button>
+             </a>
+           </div>
+         </li>
+       </ul>
+     </nav>
    </div>
  </nav>
 
@@ -466,16 +471,24 @@
 
 
 <script>
-// Mobile Menu Toggle
+// Mobile Menu Toggle - Circular Animation
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavContainer = document.getElementById('mobileNavContainer');
     
-    if (mobileMenuBtn && mobileNav) {
+    if (mobileMenuBtn && mobileNavContainer) {
         mobileMenuBtn.addEventListener('click', function() {
-            mobileMenuBtn.classList.toggle('active');
-            mobileNav.classList.toggle('active');
-            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+            const isActive = mobileNavContainer.classList.contains('active');
+            
+            if (isActive) {
+                mobileMenuBtn.classList.remove('active');
+                mobileNavContainer.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                mobileMenuBtn.classList.add('active');
+                mobileNavContainer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
         });
     }
     
@@ -485,24 +498,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function closeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavContainer = document.getElementById('mobileNavContainer');
     
-    if (mobileMenuBtn && mobileNav) {
+    if (mobileMenuBtn && mobileNavContainer) {
         mobileMenuBtn.classList.remove('active');
-        mobileNav.classList.remove('active');
+        mobileNavContainer.classList.remove('active');
         document.body.style.overflow = '';
     }
 }
 
 // Close mobile menu when clicking outside
 document.addEventListener('click', function(event) {
-    const mobileNav = document.getElementById('mobileNav');
+    const mobileNavContainer = document.getElementById('mobileNavContainer');
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     
-    if (mobileNav && mobileMenuBtn && 
-        !mobileNav.contains(event.target) && 
+    if (mobileNavContainer && mobileMenuBtn && 
+        !mobileNavContainer.contains(event.target) && 
         !mobileMenuBtn.contains(event.target) &&
-        mobileNav.classList.contains('active')) {
+        mobileNavContainer.classList.contains('active')) {
         closeMobileMenu();
     }
 });
