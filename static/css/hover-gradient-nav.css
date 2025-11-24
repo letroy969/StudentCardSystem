@@ -109,7 +109,7 @@
 }
 
 .nav-item-glow {
-    background: var(--item-gradient);
+    background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%);
 }
 
 .nav-item-front,

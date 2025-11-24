@@ -576,6 +576,8 @@ function initHoverGradientNav() {
         const glow = item.querySelector('.nav-item-glow');
         
         if (glow && gradient) {
+            // Set CSS custom property for gradient
+            item.style.setProperty('--item-gradient', gradient);
             glow.style.background = gradient;
         }
     });
