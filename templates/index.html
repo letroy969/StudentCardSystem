@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
   <title>University of Mpumalanga - Online Student Card Creation</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
   <script src="{{ url_for('static', filename='js/button-glow.js') }}" defer></script>
   <style>
     /* Base styles */
@@ -79,84 +77,6 @@
       transform: scale(1.05);
     }
     
-    /* Hero Section - Animated Welcome Text Only */
-    .hero-title {
-      animation: heroTitleFadeIn 1.1s ease-in-out 0.3s forwards;
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    
-    .hero-subtitle {
-      animation: heroSubtitleFadeIn 1.1s ease-in-out 0.5s forwards;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    
-    @keyframes heroTitleFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes heroSubtitleFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Mobile Homepage Optimizations */
-    @media (max-width: 767px) {
-      .hero-bg {
-        min-height: auto !important;
-      }
-      
-      .hero-section {
-        padding: 3rem 1rem 2rem !important;
-      }
-      
-      .hero-title {
-        font-size: 28px !important;
-        line-height: 1.3;
-        margin-bottom: 1rem !important;
-        padding: 0 1rem;
-      }
-      
-      .hero-subtitle {
-        font-size: 16px !important;
-        padding: 0 1rem;
-        line-height: 1.6;
-      }
-      
-      #about, #how-it-works, #benefits, #faq, #contact-us {
-        padding: 2rem 1rem !important;
-      }
-      
-      #about > div:first-child {
-        padding: 1.5rem !important;
-        margin-bottom: 1.5rem !important;
-      }
-      
-      #about .grid, #how-it-works .grid, #benefits .grid {
-        grid-template-columns: 1fr !important;
-        gap: 1.25rem !important;
-      }
-      
-      #about .grid > div, #how-it-works .grid > div, #benefits .grid > div {
-        padding: 1.5rem !important;
-        margin: 0 !important;
-      }
-      
-      nav h1 {
-        font-size: 14px !important;
-      }
-      
-      nav img {
-        width: 32px !important;
-        height: 32px !important;
-      }
-    }
   </style>
 </head>
 <body>
@@ -169,22 +89,13 @@
       <h1 class="text-xl font-bold hover:text-blue-300 transition-colors duration-300 transform hover:translate-x-1">University of Mpumalanga</h1>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn desktop-hidden" id="mobileMenuBtn" aria-label="Toggle mobile menu">
-      <svg width="23" height="23" viewBox="0 0 23 23">
-        <path class="line-top" d="M 2 2.5 L 20 2.5" />
-        <path class="line-middle" d="M 2 9.423 L 20 9.423" />
-        <path class="line-bottom" d="M 2 16.346 L 20 16.346" />
-      </svg>
-    </button>
-
-    <!-- Desktop Navigation -->
-    <ul class="desktop-nav flex space-x-6 items-center mobile-hidden">
+    <!-- Navigation -->
+    <ul class="flex space-x-6 items-center">
       <li><a href="#" class="nav-link">Home</a></li>
       <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
       <li><a href="#faq" class="nav-link">FAQs</a></li>
       <li><a href="#contact-us" class="nav-link">Contact Us</a></li>
-      <li><a href="{{ url_for('reports') }}" class="nav-link">Activity</a></li>
+      <li><a href="{{ url_for('reports') }}" class="nav-link">Reports</a></li>
       <li>
         <div class="button-glow-wrapper">
           <div class="button-glow" data-glow="nav-glow1"></div>
@@ -207,74 +118,6 @@
       </li>
     </ul>
   </div>
-  
-  <!-- Mobile Navigation Menu - Circular Animation -->
-  <div class="mobile-nav-container" id="mobileNavContainer">
-    <div class="mobile-nav-background"></div>
-    <nav class="mobile-nav">
-      <ul>
-        <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i><span>Home</span></a></li>
-        <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i><span>How It Works</span></a></li>
-        <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i><span>FAQs</span></a></li>
-        <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i><span>Contact Us</span></a></li>
-        <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i><span>Activity</span></a></li>
-        <li>
-          <div class="button-glow-wrapper w-full">
-            <div class="button-glow"></div>
-            <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
-              <button class="relative mobile-button bg-white text-blue-900 w-full">
-                <i class="fas fa-user-plus"></i> Get Started
-              </button>
-            </a>
-          </div>
-        </li>
-        <li>
-          <div class="button-glow-wrapper w-full">
-            <div class="button-glow"></div>
-            <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
-              <button class="relative mobile-button bg-blue-600 text-white w-full">
-                <i class="fas fa-sign-in-alt"></i> Sign In
-              </button>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  
-  <!-- Mobile Navigation Menu - Circular Animation -->
-  <div class="mobile-nav-container" id="mobileNavContainer">
-    <div class="mobile-nav-background"></div>
-    <nav class="mobile-nav">
-      <ul>
-        <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i><span>Home</span></a></li>
-        <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i><span>How It Works</span></a></li>
-        <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i><span>FAQs</span></a></li>
-        <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i><span>Contact Us</span></a></li>
-        <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i><span>Activity</span></a></li>
-        <li>
-          <div class="button-glow-wrapper w-full">
-            <div class="button-glow"></div>
-            <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
-              <button class="relative mobile-button bg-white text-blue-900 w-full">
-                <i class="fas fa-user-plus"></i> Get Started
-              </button>
-            </a>
-          </div>
-        </li>
-        <li>
-          <div class="button-glow-wrapper w-full">
-            <div class="button-glow"></div>
-            <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
-              <button class="relative mobile-button bg-blue-600 text-white w-full">
-                <i class="fas fa-sign-in-alt"></i> Sign In
-              </button>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-  </div>
 </nav>
 
 
@@ -285,21 +128,20 @@
     <div class="content">
 
       
-      <!-- Hero Section with Animated Welcome Text -->
       <section class="hero-section py-20 text-center">
-        <h1 class="hero-title text-4xl font-bold mb-4 text-white">Welcome! Create Your Digital Student Card</h1>
-        <p class="hero-subtitle text-lg max-w-2xl mx-auto text-white">
-          Get your student card quickly and securely through our easy-to-use online platform.
+        <h1 class="text-4xl font-bold mb-4 text-white">Welcome! Create Your Official Student Card Online</h1>
+        <p class="text-lg max-w-2xl mx-auto text-white">
+          Get your digital student card quickly and securely. Our online platform makes it easy to create and manage your student identification.
         </p>
       </section>
 
       
       <section id="about" class="py-12 px-4 max-w-5xl mx-auto text-white">
-        <div class="text-center mb-10 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-8 border border-white border-opacity-30">
+        <div class="text-center mb-10">
           <i class="fas fa-university text-blue-300 text-4xl mb-4"></i>
-          <h2 class="text-2xl font-semibold">Your Digital Student Card Awaits</h2>
+          <h2 class="text-2xl font-semibold">Your Digital Student Card Awaits!</h2>
           <p class="mt-4">
-            Access campus resources and services effortlessly with your virtual student card. Start creating your digital ID today and streamline your student experience.
+            Welcome to the University of Mpumalanga's Online Student Card Creation System! Get your virtual student card quickly and securely. Enjoy seamless access to campus resources and services with our easy-to-use platform. Start creating your digital ID today and simplify your university experience.
           </p>
          </div>
         <div class="grid md:grid-cols-3 gap-6">
@@ -318,24 +160,19 @@
             </p>
           </div>
           <div class="bg-white bg-opacity-90 p-6 rounded-xl shadow text-black transform hover:scale-105 transition-all duration-300">
-            <i class="fas fa-gift text-blue-600 text-3xl mb-4 hover:text-blue-700 transition-colors duration-300"></i>
-            <h3 class="font-bold text-lg mb-4">What We Offer</h3>
-            <ul class="list-disc list-inside space-y-2">
-              <li>Easy online card creation</li>
-              <li>No more waiting in queues</li>
-              <li>Mobile-friendly digital card</li>
-              <li>Safe and reliable system</li>
-            </ul>
+            <i class="fas fa-users text-blue-600 text-3xl mb-4 hover:text-blue-700 transition-colors duration-300"></i>
+            <h3 class="font-bold text-lg mb-4">Meet Our Team</h3>
+            <p>
+                Our leadership includes professionals like Mr. Andile Skhosana, along with his members Ofentse, Loidy, Letroy, Philasande, Talent, Phumla, and Ncwobileh.
+            </p>
           </div>
         </div>
       </section>
 
       
-      <section id="how-it-works" class="py-12 px-4 max-w-5xl mx-auto text-white">
-        <h2 class="text-2xl font-bold mb-8 text-center">How It Works</h2>
-        
-        <!-- Desktop Layout (unchanged) -->
-        <div class="desktop-how-it-works grid md:grid-cols-3 gap-6 mobile-hidden">
+      <section id="how-it-works" class="py-12 px-4 max-w-5xl mx-auto text-center text-white">
+        <h2 class="text-2xl font-bold mb-8">How It Works</h2>
+        <div class="grid md:grid-cols-3 gap-6">
           <div class="bg-white bg-opacity-90 p-6 rounded-xl shadow text-black">
             <i class="fas fa-pen text-blue-600 text-3xl mb-4"></i>
             <h3 class="font-bold">Register</h3>
@@ -352,38 +189,7 @@
             <p>Your application will be verified and approved online.</p>
           </div>
         </div>
-        
-        <!-- Mobile Carousel Layout -->
-        <div class="mobile-how-it-works desktop-hidden">
-          <div class="feature-carousel-container">
-            <div class="feature-card-mobile">
-              <div class="feature-card-content">
-                <div class="step-indicator" id="stepIndicator">Step 1</div>
-                <h2 class="step-title" id="stepTitle">Register</h2>
-                <p class="step-description" id="stepDescription">Create an account and provide your student details.</p>
-                <div class="step-icon-container">
-                  <div class="step-icon" id="stepIcon">
-                    <i class="fas fa-pen"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="steps-nav-mobile">
-              <button class="step-btn active" data-step="0" aria-label="Step 1">
-                <span class="step-number">1</span>
-                <span class="step-name">Register</span>
-              </button>
-              <button class="step-btn" data-step="1" aria-label="Step 2">
-                <span class="step-number">2</span>
-                <span class="step-name">Create</span>
-              </button>
-              <button class="step-btn" data-step="2" aria-label="Step 3">
-                <span class="step-number">3</span>
-                <span class="step-name">Approve</span>
-              </button>
-            </div>
-          </div>
-        </div>
+      </section>
       </section>
 
     </div>
@@ -505,176 +311,5 @@
    </footer>
 
 
-<script>
-// Mobile Menu Toggle - Circular Animation
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNavContainer = document.getElementById('mobileNavContainer');
-    
-    if (mobileMenuBtn && mobileNavContainer) {
-        mobileMenuBtn.addEventListener('click', function() {
-            const isActive = mobileNavContainer.classList.contains('active');
-            
-            if (isActive) {
-                mobileMenuBtn.classList.remove('active');
-                mobileNavContainer.classList.remove('active');
-                document.body.style.overflow = '';
-            } else {
-                mobileMenuBtn.classList.add('active');
-                mobileNavContainer.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        });
-    }
-    
-    // How It Works Carousel
-    initHowItWorksCarousel();
-});
-
-function closeMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileNavContainer = document.getElementById('mobileNavContainer');
-    
-    if (mobileMenuBtn && mobileNavContainer) {
-        mobileMenuBtn.classList.remove('active');
-        mobileNavContainer.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-}
-
-// Close mobile menu when clicking outside
-document.addEventListener('click', function(event) {
-    const mobileNavContainer = document.getElementById('mobileNavContainer');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    
-    if (mobileNavContainer && mobileMenuBtn && 
-        !mobileNavContainer.contains(event.target) && 
-        !mobileMenuBtn.contains(event.target) &&
-        mobileNavContainer.classList.contains('active')) {
-        closeMobileMenu();
-    }
-});
-
-// How It Works Carousel
-const steps = [
-    {
-        name: "Step 1",
-        title: "Register",
-        description: "Create an account and provide your student details.",
-        icon: "fas fa-pen"
-    },
-    {
-        name: "Step 2",
-        title: "Create Your Card",
-        description: "Upload your photo and confirm your information.",
-        icon: "fas fa-id-card"
-    },
-    {
-        name: "Step 3",
-        title: "Get Approved",
-        description: "Your application will be verified and approved online.",
-        icon: "fas fa-check-circle"
-    }
-];
-
-let currentStep = 0;
-let carouselInterval = null;
-
-function initHowItWorksCarousel() {
-    const stepButtons = document.querySelectorAll('.step-btn');
-    const stepIndicator = document.getElementById('stepIndicator');
-    const stepTitle = document.getElementById('stepTitle');
-    const stepDescription = document.getElementById('stepDescription');
-    const stepIcon = document.getElementById('stepIcon');
-    
-    if (!stepButtons.length) return;
-    
-    // Update step content
-    function updateStep(stepIndex) {
-        const step = steps[stepIndex];
-        if (!step) return;
-        
-        // Animate out
-        if (stepTitle) {
-            stepTitle.style.opacity = '0';
-            stepTitle.style.transform = 'translateY(20px)';
-        }
-        if (stepDescription) {
-            stepDescription.style.opacity = '0';
-            stepDescription.style.transform = 'translateY(20px)';
-        }
-        if (stepIcon) {
-            stepIcon.style.opacity = '0';
-            stepIcon.style.transform = 'scale(0.8)';
-        }
-        
-        setTimeout(() => {
-            if (stepIndicator) stepIndicator.textContent = step.name;
-            if (stepTitle) stepTitle.textContent = step.title;
-            if (stepDescription) stepDescription.textContent = step.description;
-            if (stepIcon) stepIcon.innerHTML = `<i class="${step.icon}"></i>`;
-            
-            // Animate in
-            if (stepTitle) {
-                stepTitle.style.opacity = '1';
-                stepTitle.style.transform = 'translateY(0)';
-            }
-            if (stepDescription) {
-                stepDescription.style.opacity = '1';
-                stepDescription.style.transform = 'translateY(0)';
-            }
-            if (stepIcon) {
-                stepIcon.style.opacity = '1';
-                stepIcon.style.transform = 'scale(1)';
-            }
-        }, 200);
-        
-        // Update buttons
-        stepButtons.forEach((btn, idx) => {
-            if (idx === stepIndex) {
-                btn.classList.add('active');
-            } else if (idx < stepIndex) {
-                btn.classList.add('completed');
-                btn.classList.remove('active');
-            } else {
-                btn.classList.remove('active', 'completed');
-            }
-        });
-    }
-    
-    // Button click handlers
-    stepButtons.forEach((btn, idx) => {
-        btn.addEventListener('click', () => {
-            currentStep = idx;
-            updateStep(currentStep);
-            resetCarousel();
-        });
-    });
-    
-    // Auto-cycle
-    function nextStep() {
-        currentStep = (currentStep + 1) % steps.length;
-        updateStep(currentStep);
-    }
-    
-    function resetCarousel() {
-        if (carouselInterval) clearInterval(carouselInterval);
-        carouselInterval = setInterval(nextStep, 5000);
-    }
-    
-    // Initialize
-    updateStep(0);
-    resetCarousel();
-    
-    // Pause on hover
-    const carouselContainer = document.querySelector('.feature-carousel-container');
-    if (carouselContainer) {
-        carouselContainer.addEventListener('mouseenter', () => {
-            if (carouselInterval) clearInterval(carouselInterval);
-        });
-        carouselContainer.addEventListener('mouseleave', resetCarousel);
-    }
-}
-</script>
 </body>
 </html>
