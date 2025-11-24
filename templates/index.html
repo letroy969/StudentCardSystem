@@ -161,14 +161,14 @@
 </head>
 <body>
  
-<!-- Top Header Bar -->
-<header class="bg-blue-900 text-white py-4 px-6 fixed top-0 w-full z-50 shadow-md">
+<nav class="bg-blue-900 text-white py-4 px-6 fixed top-0 w-full z-50 shadow-md transition-all duration-300 hover:shadow-xl">
   <div class="flex justify-between items-center w-full">
+  
     <div class="flex items-center space-x-4">
-      <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="UMP Logo" class="w-10 h-10 transform hover:scale-110 transition-transform duration-300">
-      <h1 class="text-xl font-bold">University of Mpumalanga</h1>
+      <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="UMP Logo" class="w-10 h-10 transform hover:scale-110 transition-transform duration-300 hover:rotate-3">
+      <h1 class="text-xl font-bold hover:text-blue-300 transition-colors duration-300 transform hover:translate-x-1">University of Mpumalanga</h1>
     </div>
-    
+
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-btn desktop-hidden" id="mobileMenuBtn" aria-label="Toggle mobile menu">
       <svg width="23" height="23" viewBox="0 0 23 23">
@@ -177,6 +177,35 @@
         <path class="line-bottom" d="M 2 16.346 L 20 16.346" />
       </svg>
     </button>
+
+    <!-- Desktop Navigation -->
+    <ul class="desktop-nav flex space-x-6 items-center mobile-hidden">
+      <li><a href="#" class="nav-link">Home</a></li>
+      <li><a href="#how-it-works" class="nav-link">How It Works</a></li>
+      <li><a href="#faq" class="nav-link">FAQs</a></li>
+      <li><a href="#contact-us" class="nav-link">Contact Us</a></li>
+      <li><a href="{{ url_for('reports') }}" class="nav-link">Activity</a></li>
+      <li>
+        <div class="button-glow-wrapper">
+          <div class="button-glow" data-glow="nav-glow1"></div>
+          <a href="{{ url_for('register') }}">
+            <button class="relative bg-white text-blue-900 px-4 py-2 rounded-md font-semibold hover:bg-gray-200 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+                <i class="fas fa-user-plus mr-1"></i>Get Started
+            </button>
+          </a>
+        </div>
+      </li>
+      <li>
+        <div class="button-glow-wrapper">
+          <div class="button-glow" data-glow="nav-glow2"></div>
+          <a href="{{ url_for('login') }}">
+            <button class="relative bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+              <i class="fas fa-sign-in-alt mr-1"></i>Sign In
+            </button>
+          </a>
+        </div>
+      </li>
+    </ul>
   </div>
   
   <!-- Mobile Navigation Menu - Circular Animation -->
@@ -212,7 +241,41 @@
       </ul>
     </nav>
   </div>
-</header>
+  
+  <!-- Mobile Navigation Menu - Circular Animation -->
+  <div class="mobile-nav-container" id="mobileNavContainer">
+    <div class="mobile-nav-background"></div>
+    <nav class="mobile-nav">
+      <ul>
+        <li><a href="#" onclick="closeMobileMenu()"><i class="fas fa-home"></i><span>Home</span></a></li>
+        <li><a href="#how-it-works" onclick="closeMobileMenu()"><i class="fas fa-cogs"></i><span>How It Works</span></a></li>
+        <li><a href="#faq" onclick="closeMobileMenu()"><i class="fas fa-question-circle"></i><span>FAQs</span></a></li>
+        <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i><span>Contact Us</span></a></li>
+        <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i><span>Activity</span></a></li>
+        <li>
+          <div class="button-glow-wrapper w-full">
+            <div class="button-glow"></div>
+            <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
+              <button class="relative mobile-button bg-white text-blue-900 w-full">
+                <i class="fas fa-user-plus"></i> Get Started
+              </button>
+            </a>
+          </div>
+        </li>
+        <li>
+          <div class="button-glow-wrapper w-full">
+            <div class="button-glow"></div>
+            <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
+              <button class="relative mobile-button bg-blue-600 text-white w-full">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+              </button>
+            </a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</nav>
 
 
 

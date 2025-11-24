@@ -348,10 +348,19 @@
    MEDIA QUERIES
    ============================================ */
 
+/* Mobile Hidden/Visible - Base styles */
+.mobile-hidden {
+    display: none;
+}
+
+.desktop-hidden {
+    display: none;
+}
+
 @media (max-width: 767px) {
     /* Mobile Navigation */
     .mobile-menu-btn {
-        display: block;
+        display: block !important;
     }
     
     .desktop-nav {
@@ -361,9 +370,8 @@
     .mobile-nav-container {
         display: block;
     }
-}
     
-    /* Mobile Hidden/Visible */
+    /* Mobile: Show mobile elements, hide desktop */
     .mobile-hidden {
         display: none !important;
     }
@@ -371,6 +379,30 @@
     .desktop-hidden {
         display: block !important;
     }
+}
+
+/* Desktop: Show desktop elements, hide mobile */
+@media only screen and (min-width: 768px) {
+    .mobile-menu-btn {
+        display: none !important;
+    }
+    
+    .desktop-nav {
+        display: flex !important;
+    }
+    
+    .mobile-nav-container {
+        display: none !important;
+    }
+    
+    .mobile-hidden {
+        display: block !important;
+    }
+    
+    .desktop-hidden {
+        display: none !important;
+    }
+}
     
     /* Card Preview Mobile */
     .card-preview {
