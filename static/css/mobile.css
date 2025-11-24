@@ -578,8 +578,7 @@
     #about .grid.md\\:grid-cols-3 > div {
         width: 100% !important;
     }
-}
-
+    
     /* How It Works Section Mobile */
     #how-it-works {
         padding: 2rem 1rem !important;
