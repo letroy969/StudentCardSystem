@@ -78,168 +78,17 @@
       transform: scale(1.05);
     }
     
-    /* Enhanced Hero Section Styles */
-    .hero-section-enhanced {
-      position: relative;
-      min-height: 80vh;
-      padding: 4rem 0;
-    }
-    
-    .hero-gradient-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      overflow: hidden;
-    }
-    
-    .hero-blur {
-      animation: fadeIn 0.8s ease-out;
-    }
-    
-    .hero-main-glow {
-      animation: glowPulse 4s ease-in-out infinite;
-    }
-    
-    .hero-lamp {
-      width: 8rem;
-      animation: lampExpand 1.1s ease-in-out 0.3s forwards, glowPulse 4s ease-in-out infinite;
-    }
-    
-    .hero-top-line {
-      width: 15rem;
-      animation: lineExpand 1.1s ease-in-out 0.3s forwards;
-    }
-    
-    .hero-left-cone {
-      background: conic-gradient(from 70deg at center top, rgba(59, 130, 246, 0.6), transparent, transparent);
-      opacity: 0.5;
-      animation: coneExpand 1.1s ease-in-out 0.3s forwards;
-    }
-    
-    .hero-left-cone::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      left: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-      height: 40%;
-      bottom: 0;
-      z-index: 20;
-      mask-image: linear-gradient(to top, white, transparent);
-    }
-    
-    .hero-left-cone::after {
-      content: '';
-      position: absolute;
-      width: 40%;
-      height: 100%;
-      left: 0;
-      background: linear-gradient(to right, rgba(0, 0, 0, 0.7), transparent);
-      bottom: 0;
-      z-index: 20;
-      mask-image: linear-gradient(to right, white, transparent);
-    }
-    
-    .hero-right-cone {
-      background: conic-gradient(from 290deg at center top, transparent, transparent, rgba(59, 130, 246, 0.6));
-      opacity: 0.5;
-      animation: coneExpand 1.1s ease-in-out 0.3s forwards;
-    }
-    
-    .hero-right-cone::before {
-      content: '';
-      position: absolute;
-      width: 40%;
-      height: 100%;
-      right: 0;
-      background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
-      bottom: 0;
-      z-index: 20;
-      mask-image: linear-gradient(to left, white, transparent);
-    }
-    
-    .hero-right-cone::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      right: 0;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-      height: 40%;
-      bottom: 0;
-      z-index: 20;
-      mask-image: linear-gradient(to top, white, transparent);
-    }
-    
-    .hero-content {
-      animation: heroContentFadeIn 1.1s ease-in-out 0.3s forwards;
-      opacity: 0;
-      transform: translateY(100px);
-    }
-    
+    /* Hero Section - Animated Welcome Text Only */
     .hero-title {
-      animation: heroTitleFadeIn 1.1s ease-in-out 0.5s forwards;
+      animation: heroTitleFadeIn 1.1s ease-in-out 0.3s forwards;
       opacity: 0;
       transform: translateY(30px);
     }
     
     .hero-subtitle {
-      animation: heroSubtitleFadeIn 1.1s ease-in-out 0.7s forwards;
+      animation: heroSubtitleFadeIn 1.1s ease-in-out 0.5s forwards;
       opacity: 0;
       transform: translateY(20px);
-    }
-    
-    .hero-actions {
-      animation: heroActionsFadeIn 1.1s ease-in-out 0.9s forwards;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    
-    @keyframes glowPulse {
-      0%, 100% {
-        opacity: 0.8;
-      }
-      50% {
-        opacity: 1;
-      }
-    }
-    
-    @keyframes lampExpand {
-      from {
-        width: 8rem;
-      }
-      to {
-        width: 16rem;
-      }
-    }
-    
-    @keyframes lineExpand {
-      from {
-        width: 15rem;
-      }
-      to {
-        width: 30rem;
-      }
-    }
-    
-    @keyframes coneExpand {
-      from {
-        opacity: 0.5;
-        width: 15rem;
-      }
-      to {
-        opacity: 1;
-        width: 30rem;
-      }
-    }
-    
-    @keyframes heroContentFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
     }
     
     @keyframes heroTitleFadeIn {
@@ -256,27 +105,20 @@
       }
     }
     
-    @keyframes heroActionsFadeIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
     /* Mobile Homepage Optimizations */
     @media (max-width: 767px) {
       .hero-bg {
         min-height: auto !important;
       }
       
-      .hero-section-enhanced {
-        min-height: 70vh !important;
-        padding: 2rem 1rem !important;
+      .hero-section {
+        padding: 3rem 1rem 2rem !important;
       }
       
       .hero-title {
-        font-size: 32px !important;
-        line-height: 1.2;
+        font-size: 28px !important;
+        line-height: 1.3;
+        margin-bottom: 1rem !important;
         padding: 0 1rem;
       }
       
@@ -284,33 +126,6 @@
         font-size: 16px !important;
         padding: 0 1rem;
         line-height: 1.6;
-      }
-      
-      .hero-actions {
-        flex-direction: column;
-        width: 100%;
-        max-width: 300px;
-      }
-      
-      .hero-actions button {
-        width: 100%;
-      }
-      
-      .hero-main-glow {
-        width: 20rem !important;
-      }
-      
-      .hero-lamp {
-        width: 6rem !important;
-      }
-      
-      .hero-top-line {
-        width: 12rem !important;
-      }
-      
-      .hero-left-cone,
-      .hero-right-cone {
-        width: 20rem !important;
       }
       
       #about, #how-it-works, #benefits, #faq, #contact-us {
@@ -417,52 +232,12 @@
     <div class="content">
 
       
-      <!-- Enhanced Hero Section with Animated Gradients -->
-      <section class="hero-section-enhanced relative z-0 flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden">
-        <!-- Gradient Effects Container -->
-        <div class="hero-gradient-container absolute top-0 isolate z-0 flex w-screen flex-1 items-start justify-center">
-          <!-- Blur overlay -->
-          <div class="hero-blur absolute top-0 z-50 h-48 w-screen bg-transparent opacity-10 backdrop-blur-md"></div>
-          
-          <!-- Main glow -->
-          <div class="hero-main-glow absolute inset-auto z-50 h-36 w-[28rem] -translate-y-[-30%] rounded-full bg-blue-500/60 opacity-80 blur-3xl"></div>
-          
-          <!-- Lamp effect -->
-          <div class="hero-lamp absolute top-0 z-30 h-36 -translate-y-[20%] rounded-full bg-blue-500/60 blur-2xl"></div>
-          
-          <!-- Top line -->
-          <div class="hero-top-line absolute inset-auto z-50 h-0.5 -translate-y-[-10%] bg-blue-500/60"></div>
-          
-          <!-- Left gradient cone -->
-          <div class="hero-left-cone absolute inset-auto right-1/2 h-56 overflow-visible w-[30rem] bg-gradient-conic-left"></div>
-          
-          <!-- Right gradient cone -->
-          <div class="hero-right-cone absolute inset-auto left-1/2 h-56 w-[30rem] bg-gradient-conic-right"></div>
-        </div>
-        
-        <!-- Content -->
-        <div class="hero-content relative z-50 container flex justify-center flex-1 flex-col px-5 md:px-10 gap-4 -translate-y-20">
-          <div class="flex flex-col items-center text-center space-y-4">
-            <h1 class="hero-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white">
-              Welcome! Create Your Digital Student Card
-            </h1>
-            <p class="hero-subtitle text-xl text-white/90 max-w-2xl">
-              Get your student card quickly and securely through our easy-to-use online platform.
-            </p>
-            <div class="hero-actions flex gap-4 mt-4">
-              <a href="{{ url_for('register') }}">
-                <button class="bg-white text-blue-900 px-6 py-3 rounded-md font-semibold hover:bg-gray-200 hover:scale-105 transform transition-all duration-300 hover:shadow-lg">
-                  <i class="fas fa-user-plus mr-2"></i>Get Started
-                </button>
-              </a>
-              <a href="{{ url_for('login') }}">
-                <button class="bg-blue-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transform transition-all duration-300 hover:shadow-lg">
-                  <i class="fas fa-sign-in-alt mr-2"></i>Sign In
-                </button>
-              </a>
-            </div>
-          </div>
-        </div>
+      <!-- Hero Section with Animated Welcome Text -->
+      <section class="hero-section py-20 text-center">
+        <h1 class="hero-title text-4xl font-bold mb-4 text-white">Welcome! Create Your Digital Student Card</h1>
+        <p class="hero-subtitle text-lg max-w-2xl mx-auto text-white">
+          Get your student card quickly and securely through our easy-to-use online platform.
+        </p>
       </section>
 
       
