@@ -1014,7 +1014,8 @@ def dashboard():
             flash('Database connection failed!', 'error')
             return redirect(url_for('student_card_preview'))
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM student_cards WHERE email = %s', (session['user'],))
+        # Use LOWER() for case-insensitive email matching
+        cursor.execute('SELECT * FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         card_data = cursor.fetchone()
         if card_data is not None:
             card_data['student_number'] = student_number
@@ -1023,7 +1024,14 @@ def dashboard():
             else:
                 card_data['campus'] = student_campus
             # Debug: Print photo_path to verify it's being retrieved
-            print(f"DEBUG - Dashboard: Retrieved photo_path: {card_data.get('photo_path')}")
+            print(f"DEBUG - Dashboard: Retrieved photo_path: {card_data.get('photo_path')} for email: {session['user']}")
+            # Verify photo file exists
+            if card_data.get('photo_path'):
+                photo_file_path = os.path.join('static', card_data.get('photo_path'))
+                if os.path.exists(photo_file_path):
+                    print(f"DEBUG - Dashboard: Photo file EXISTS at: {photo_file_path}")
+                else:
+                    print(f"DEBUG - Dashboard: WARNING - Photo file NOT FOUND at: {photo_file_path}")
     except Exception as e:
         print(f"Error loading card data: {e}")
     finally:
@@ -1049,7 +1057,8 @@ def student_card_preview():
             flash('Database connection failed!', 'error')
             return redirect(url_for('student_card_preview'))
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM student_cards WHERE email = %s', (session['user'],))
+        # Use LOWER() for case-insensitive email matching
+        cursor.execute('SELECT * FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         card_data = cursor.fetchone()
         if card_data is not None:
             if not card_data.get('student_number'):
@@ -1059,7 +1068,14 @@ def student_card_preview():
             else:
                 card_data['campus'] = student_campus
             # Debug: Print photo_path to verify it's being retrieved
-            print(f"DEBUG - Preview: Retrieved photo_path: {card_data.get('photo_path')}")
+            print(f"DEBUG - Preview: Retrieved photo_path: {card_data.get('photo_path')} for email: {session['user']}")
+            # Verify photo file exists
+            if card_data.get('photo_path'):
+                photo_file_path = os.path.join('static', card_data.get('photo_path'))
+                if os.path.exists(photo_file_path):
+                    print(f"DEBUG - Preview: Photo file EXISTS at: {photo_file_path}")
+                else:
+                    print(f"DEBUG - Preview: WARNING - Photo file NOT FOUND at: {photo_file_path}")
     except Exception as e:
         print(f"Error loading card data: {e}")
     finally:
@@ -1232,19 +1248,20 @@ def update_card():
             return redirect(url_for('student_card_preview'))
         cursor = conn.cursor()
         
-        # Check if card exists
-        cursor.execute('SELECT id FROM student_cards WHERE email = %s', (session['user'],))
+        # Check if card exists (case-insensitive email matching)
+        cursor.execute('SELECT id FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         existing_card = cursor.fetchone()
         
         if existing_card:
             # Update existing card
             # First, get the existing photo_path to preserve it if no new photo is uploaded
-            cursor.execute('SELECT photo_path FROM student_cards WHERE email = %s', (session['user'],))
+            cursor.execute('SELECT photo_path FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
             existing_photo = cursor.fetchone()
             existing_photo_path = existing_photo.get('photo_path') if existing_photo else None
             
             # Use new photo_path if provided, otherwise keep existing one
             final_photo_path = photo_path if photo_path else existing_photo_path
+            print(f"DEBUG - Update: existing_photo_path={existing_photo_path}, new photo_path={photo_path}, final_photo_path={final_photo_path}")
             
             update_query = 'UPDATE student_cards SET title = %s, name = %s, surname = %s, qualification = %s, student_number = %s, campus = %s, last_updated = NOW()'
             params = [title, name, surname, qualification, student_number, campus]
@@ -1278,11 +1295,11 @@ def update_card():
         
         conn.commit()
         
-        # Verify the photo_path was saved correctly
-        cursor.execute('SELECT photo_path FROM student_cards WHERE email = %s', (session['user'],))
+        # Verify the photo_path was saved correctly (case-insensitive)
+        cursor.execute('SELECT photo_path FROM student_cards WHERE LOWER(email) = LOWER(%s)', (session['user'],))
         saved_photo = cursor.fetchone()
         if saved_photo:
-            print(f"DEBUG - After save: Verified photo_path in DB: {saved_photo.get('photo_path')}")
+            print(f"DEBUG - After save: Verified photo_path in DB: {saved_photo.get('photo_path')} for email: {session['user']}")
             # Also verify the file exists
             if saved_photo.get('photo_path'):
                 file_path = os.path.join('static', saved_photo.get('photo_path'))
@@ -1290,6 +1307,13 @@ def update_card():
                     print(f"DEBUG - Photo file exists at: {file_path}")
                 else:
                     print(f"DEBUG - WARNING: Photo file NOT found at: {file_path}")
+                    print(f"DEBUG - Current working directory: {os.getcwd()}")
+                    print(f"DEBUG - Static folder: {app.static_folder}")
+                    # List files in uploads directory
+                    uploads_dir = app.config['UPLOAD_FOLDER']
+                    if os.path.exists(uploads_dir):
+                        files = os.listdir(uploads_dir)
+                        print(f"DEBUG - Files in uploads directory: {files[:10]}")  # Show first 10 files
         
         flash('Card updated successfully!')
         
