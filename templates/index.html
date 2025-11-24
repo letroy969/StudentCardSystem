@@ -8,6 +8,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='js/button-glow.js') }}" defer></script>
   <style>
     /* Base styles */
     .hero-bg {
@@ -183,18 +184,24 @@
        <li><a href="#contact-us" class="nav-link">Contact Us</a></li>
        <li><a href="{{ url_for('reports') }}" class="nav-link">Activity</a></li>
        <li>
-         <a href="{{ url_for('register') }}">
-           <button class="bg-white text-blue-900 px-4 py-2 rounded-md font-semibold hover:bg-gray-200 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
-               <i class="fas fa-user-plus mr-1"></i>Get Started
-           </button>
-         </a>
+         <div class="button-glow-wrapper">
+           <div class="button-glow" data-glow="nav-glow1"></div>
+           <a href="{{ url_for('register') }}">
+             <button class="relative bg-white text-blue-900 px-4 py-2 rounded-md font-semibold hover:bg-gray-200 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+                 <i class="fas fa-user-plus mr-1"></i>Get Started
+             </button>
+           </a>
+         </div>
        </li>
        <li>
-         <a href="{{ url_for('login') }}">
-           <button class="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
-             <i class="fas fa-sign-in-alt mr-1"></i>Sign In
-           </button>
-         </a>
+         <div class="button-glow-wrapper">
+           <div class="button-glow" data-glow="nav-glow2"></div>
+           <a href="{{ url_for('login') }}">
+             <button class="relative bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 hover:scale-105 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 active:scale-95">
+               <i class="fas fa-sign-in-alt mr-1"></i>Sign In
+             </button>
+           </a>
+         </div>
        </li>
      </ul>
    </div>
@@ -208,18 +215,24 @@
        <li><a href="#contact-us" onclick="closeMobileMenu()"><i class="fas fa-envelope"></i>Contact Us</a></li>
        <li><a href="{{ url_for('reports') }}" onclick="closeMobileMenu()"><i class="fas fa-chart-line"></i>Activity</a></li>
        <li>
-         <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
-           <button class="mobile-button bg-white text-blue-900 w-full">
-             <i class="fas fa-user-plus"></i> Get Started
-           </button>
-         </a>
+         <div class="button-glow-wrapper">
+           <div class="button-glow" data-glow="mobile-glow1"></div>
+           <a href="{{ url_for('register') }}" onclick="closeMobileMenu()">
+             <button class="relative mobile-button bg-white text-blue-900 w-full">
+               <i class="fas fa-user-plus"></i> Get Started
+             </button>
+           </a>
+         </div>
        </li>
        <li>
-         <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
-           <button class="mobile-button bg-blue-600 text-white w-full">
-             <i class="fas fa-sign-in-alt"></i> Sign In
-           </button>
-         </a>
+         <div class="button-glow-wrapper">
+           <div class="button-glow" data-glow="mobile-glow2"></div>
+           <a href="{{ url_for('login') }}" onclick="closeMobileMenu()">
+             <button class="relative mobile-button bg-blue-600 text-white w-full">
+               <i class="fas fa-sign-in-alt"></i> Sign In
+             </button>
+           </a>
+         </div>
        </li>
      </ul>
    </div>
@@ -239,6 +252,26 @@
           Get your student card quickly and securely through our easy-to-use online platform.
         </p>
       </section>
+      
+      <!-- CTA Buttons with Glow Effect -->
+      <div class="flex justify-center gap-4 mt-8">
+        <div class="button-glow-wrapper">
+          <div class="button-glow" data-glow="glow1"></div>
+          <a href="{{ url_for('register') }}">
+            <button class="relative inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/40">
+              <i class="fas fa-user-plus"></i> Get Started
+            </button>
+          </a>
+        </div>
+        <div class="button-glow-wrapper">
+          <div class="button-glow" data-glow="glow2"></div>
+          <a href="{{ url_for('login') }}">
+            <button class="relative inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-md border border-white/20 transition-all duration-300 hover:bg-white/20 hover:border-white/30 focus:outline-none focus:ring-2 focus:ring-white/40">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+          </a>
+        </div>
+      </div>
 
       
       <section id="about" class="py-12 px-4 max-w-5xl mx-auto text-white">
@@ -468,7 +501,35 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // How It Works Carousel
     initHowItWorksCarousel();
+    
+    // Button Glow Effect
+    initButtonGlow();
 });
+
+// Button Glow Effect - Mouse Following
+function initButtonGlow() {
+    const glowElements = document.querySelectorAll('.button-glow');
+    
+    if (!glowElements.length) return;
+    
+    glowElements.forEach((glow) => {
+        const wrapper = glow.closest('.button-glow-wrapper');
+        if (!wrapper) return;
+        
+        const onMove = (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            glow.style.transform = `translate(-${50 - (x - 50) / 5}%, -${50 - (y - 50) / 5}%)`;
+        };
+        
+        wrapper.addEventListener('mousemove', onMove);
+        wrapper.addEventListener('mouseleave', () => {
+            glow.style.transform = 'translate(-50%, -50%)';
+        });
+    });
+}
 
 function closeMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');

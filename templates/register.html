@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ url_for('static', filename='js/button-glow.js') }}" defer></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         .bg-image {
@@ -307,10 +308,13 @@
                     </div>
 
                     <div>
-                        <button type="submit"
-                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 btn-primary">
-                            Create Account
-                        </button>
+                        <div class="button-glow-wrapper w-full">
+                            <div class="button-glow" data-glow="register-btn"></div>
+                            <button type="submit"
+                                class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 btn-primary">
+                                Create Account
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
