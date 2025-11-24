@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"/>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
     <title>Login - University of Mpumalanga</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/mobile.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ url_for('static', filename='js/button-glow.js') }}" defer></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="{{ url_for('static', filename='js/button-glow.js') }}" defer></script>
     <style>
         .bg-image {
             background-image: url("{{ url_for('static', filename='images/10yrs.jpg') }}");
