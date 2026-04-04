@@ -35,6 +35,11 @@
 
 ## 📌 Overview
 
+<img width="1919" height="966" alt="image" src="https://github.com/user-attachments/assets/1936e64c-cbfe-4936-8360-9dd695a39589" />
+<img width="1416" height="959" alt="image" src="https://github.com/user-attachments/assets/da3eacea-8d82-4bd0-9d15-d2e898fb6cd7" />
+
+
+
 The **Online Student Card Creation System (SCCS)** is a full-stack web application that bridges the gap between students and university administration by streamlining the student card request and issuance process.
 
 Instead of physical queues and manual paperwork, students can submit their details, upload required documents, and receive a digital student card — all through a clean, intuitive web interface. Administrators gain a centralised dashboard to review, approve, and manage student records with full visibility and control.
