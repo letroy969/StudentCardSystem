@@ -33,10 +33,16 @@
 
 </div>
 
+
 ## 📌 Overview
 
-<img width="1919" height="966" alt="image" src="https://github.com/user-attachments/assets/1936e64c-cbfe-4936-8360-9dd695a39589" />
-<img width="1416" height="959" alt="image" src="https://github.com/user-attachments/assets/da3eacea-8d82-4bd0-9d15-d2e898fb6cd7" />
+<div align="center">
+
+| | |
+|---|---|
+| <img width="500" alt="Student Registration" src="https://github.com/user-attachments/assets/1936e64c-cbfe-4936-8360-9dd695a39589" /> | <img width="500" alt="Admin Dashboard" src="https://github.com/user-attachments/assets/da3eacea-8d82-4bd0-9d15-d2e898fb6cd7" /> |
+
+</div>
 
 
 
