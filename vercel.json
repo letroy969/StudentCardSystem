@@ -1,0 +1,7 @@
+{
+  "routes": [
+    { "src": "/dashboard", "dest": "/dashboard.html" },
+    { "src": "/admin", "dest": "/admin-panel.html" },
+    { "src": "/card", "dest": "/virtual-card.html" }
+  ]
+}
